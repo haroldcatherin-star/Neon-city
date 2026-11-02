@@ -950,8 +950,15 @@ function buildPdcMap(s){
     inst(ub,new T.MeshLambertMaterial({color:0xffffff}),MK,false);
     inst(cylG(),new T.MeshLambertMaterial({color:0xffffff}),LP,true);inst(ub,new T.MeshLambertMaterial({color:0xffffff}),LA,false);inst(ub,ST.glow,LH,false);
     {const pm=new T.MeshBasicMaterial({map:glowTex,color:0xffc890,transparent:true,opacity:.3,blending:T.AdditiveBlending,depthWrite:false});ST.leds.push(pm);inst(new T.PlaneGeometry(1,1).rotateX(-Math.PI/2),pm,LPL,false);}
-    {const pb=[],pc=[],ps=[];PARKED.forEach(([x,z,o])=>{const hx=o==='h',L=RR(3.9,4.7),cl=RP(VCOL);pb.push([x,.3,z,hx?L:1.78,.68,hx?1.78:L,cl]);pc.push([x,.98,z,hx?L*.5:1.58,.58,hx?1.58:L*.5,0x1f262e]);ps.push([x,0,z,hx?L-.7:1.7,.34,hx?1.7:L-.7,0x111214]);COLL.push({x,z,hw:hx?L/2:.89,hd:hx?.89:L/2});});
-      inst(ub,new T.MeshPhongMaterial({color:0xffffff,shininess:60}),pb,true);inst(ub,new T.MeshPhongMaterial({color:0xffffff,shininess:90}),pc,false);inst(ub,new T.MeshLambertMaterial({color:0xffffff}),ps,false);}
+    // Voitures garées : corps physiques (on peut les pousser, elles glissent et tournent)
+    const PK=PARKED.map(([x,z,o],i)=>({i,x,z,h:o==='h'?Math.PI/2:(R()<.5?0:Math.PI),L:RR(3.9,4.7),rad:.95,m:1.1,vx:0,vz:0,w:0,mov:false,disp:false,cl:RP(VCOL)}));
+    const pkB=new T.InstancedMesh(ub,new T.MeshPhongMaterial({color:0xffffff,shininess:60}),Math.max(1,PK.length)),pkC=new T.InstancedMesh(ub,new T.MeshPhongMaterial({color:0xffffff,shininess:90}),Math.max(1,PK.length)),pkS=new T.InstancedMesh(ub,new T.MeshLambertMaterial({color:0xffffff}),Math.max(1,PK.length));
+    const pkSet=b=>{dm.rotation.set(0,b.h,0);dm.position.set(b.x,.3,b.z);dm.scale.set(1.78,.68,b.L);dm.updateMatrix();pkB.setMatrixAt(b.i,dm.matrix);
+      const cf=-.15*b.L;dm.position.set(b.x+Math.sin(b.h)*cf,.98,b.z+Math.cos(b.h)*cf);dm.scale.set(1.58,.58,b.L*.5);dm.updateMatrix();pkC.setMatrixAt(b.i,dm.matrix);
+      dm.position.set(b.x,0,b.z);dm.scale.set(1.7,.34,b.L-.7);dm.updateMatrix();pkS.setMatrixAt(b.i,dm.matrix);};
+    PK.forEach(b=>{pkSet(b);pkB.setColorAt(b.i,col.setHex(b.cl));pkC.setColorAt(b.i,col.setHex(0x1f262e));pkS.setColorAt(b.i,col.setHex(0x111214));});
+    [pkB,pkC,pkS].forEach(m=>{if(m.instanceColor)m.instanceColor.needsUpdate=true;m.receiveShadow=true;scene.add(m);});pkB.castShadow=true;
+    if(!PK.length)[pkB,pkC,pkS].forEach(m=>m.count=0);
 
     // ===== Feux tricolores =====
     const TLp=[],TLh=[],LAMP={h:[[],[],[]],v:[[],[],[]]};
@@ -997,6 +1004,7 @@ function buildPdcMap(s){
       {L:3.9,W:1.72,vm:1,body:[[1.95,.3],[1.95,.74],[1.45,.85],[.85,.92],[-1.95,.96],[-1.95,.3]],cab:[[.85,.92],[.2,1.45],[-1.72,1.47],[-1.9,.96]],wr:.31,fz:1.25,rz:-1.25,hy:.7,ty:.82},
       {L:5.2,W:2,vm:.9,body:[[2.6,.34],[2.6,.95],[2.1,1.15],[1.55,1.2],[1.55,2.35],[-2.6,2.35],[-2.6,.34]],cab:[[2.12,1.16],[1.6,1.95],[1.25,1.95],[1.25,1.16]],wr:.35,fz:1.75,rz:-1.7,hy:.8,ty:.9},
       {L:12,W:2.55,vm:.78,bus:1,body:[[6,.35],[6,3.1],[-6,3.1],[-6,.35]],cab:[[6.02,1.2],[6.02,2.85],[-5.95,2.85],[-5.95,1.2]],wr:.5,fz:4.2,rz:-3.6,hy:.75,ty:.9}];
+    [1.2,1,1.7,5].forEach((m,i)=>{VT[i].m=m;VT[i].rad=[.95,.92,1.05,1.3][i];});
     VT.forEach(t=>{t.gb=exZY(shp(t.body),t.W-.08,.04);t.gc=exZY(shp(t.cab),t.bus?t.W+.04:t.W-.22,t.bus?0:.03);
       t.gw=mergeG([[1,t.fz],[-1,t.fz],[1,t.rz],[-1,t.rz]].map(([sx,z])=>new T.CylinderGeometry(t.wr,t.wr,.26,14).rotateZ(Math.PI/2).translate(sx*(t.W/2-.14),t.wr,z)));
       t.gh=mergeG([1,-1].map(sx=>new T.BoxGeometry(.34,.12,.08).translate(sx*(t.W/2-.3),t.hy,t.L/2+.03)));t.gt=mergeG([1,-1].map(sx=>new T.BoxGeometry(.3,.12,.08).translate(sx*(t.W/2-.28),t.ty,-t.L/2-.03)));});
@@ -1013,7 +1021,7 @@ function buildPdcMap(s){
     for(let k=0,tries=0;k<NT&&tries<3000;tries++){const e=EDGES[Math.floor(Math.random()*EDGES.length)],t=VT[k<4?3:(k%6===0?2:(k%3===0?1:0))];if(e.L-e.cA-e.cB-t.L<16)continue;
       const s=e.cA+3+Math.random()*(e.L-e.cA-e.cB-8-t.L),lane=e.r.k==='av'?(t.bus?1:Math.floor(Math.random()*2)):0,lo=LO(e.r,lane),x=e.A.x+e.dx*s+e.rx*lo,z=e.A.z+e.dz*s+e.rz*lo;
       if(TRAF.some(o=>Math.hypot(o.x-x,o.z-z)<16)||Math.hypot(x+75,z-zMain)<35)continue;
-      const c={t,L:t.L,g:mkVeh(t),e,s,lane,lo,v:0,mul:t.vm*(.88+Math.random()*.24),mode:'run',u:0,bl:1,P:null,wait:0,ghost:0,x,z,h:Math.atan2(e.dx,e.dz)};c.nx=pickNext(c);c.g.position.set(x,0,z);c.g.rotation.y=c.h;TRAF.push(c);k++;}
+      const c={t,L:t.L,g:mkVeh(t),e,s,lane,lo,v:0,mul:t.vm*(.88+Math.random()*.24),mode:'run',u:0,bl:1,P:null,wait:0,ghost:0,x,z,h:Math.atan2(e.dx,e.dz),m:t.m,rad:t.rad,vx:0,vz:0,w:0,knock:false,rest:0,rec:null,isTraf:true};c.nx=pickNext(c);c.g.position.set(x,0,z);c.g.rotation.y=c.h;TRAF.push(c);k++;}
     const bez=(P,u)=>{const a=(1-u)*(1-u),b=2*u*(1-u),c2=u*u;return[a*P[0][0]+b*P[1][0]+c2*P[2][0],a*P[0][1]+b*P[1][1]+c2*P[2][1]];};
     const bezD=(P,u)=>[2*(1-u)*(P[1][0]-P[0][0])+2*u*(P[2][0]-P[1][0]),2*(1-u)*(P[1][1]-P[0][1])+2*u*(P[2][1]-P[1][1])];
     function startTurn(c){const e=c.e,n=c.nx,e2=n.e,B=e.B;
@@ -1021,13 +1029,24 @@ function buildPdcMap(s){
       const P1=n.turn?[B.x+e.rx*c.lo+e2.rx*n.lo,B.z+e.rz*c.lo+e2.rz*n.lo]:[(P0[0]+P2[0])/2,(P0[1]+P2[1])/2];
       c.P=[P0,P1,P2];let L=0,pr=P0;for(let k=1;k<=8;k++){const q=bez(c.P,k/8);L+=Math.hypot(q[0]-pr[0],q[1]-pr[1]);pr=q;}c.bl=Math.max(.5,L);c.u=0;c.mode='turn';}
     function trafficUpdate(dt,PL){
-      for(const c of TRAF){const e=c.e;let tgt=(e.r.k==='av'?15:e.r.k==='tram'?11:12.5)*c.mul;
+      for(const c of TRAF){
+        if(c.knock){ // percutée : glisse (dynStep), puis se remet dans sa voie
+          if(c.rest>2.5&&!c.rec){if(c.mode==='turn'){c.e=c.nx.e;c.lo=c.nx.lo;c.lane=c.nx.lane;c.mode='run';c.s=c.e.cA;c.nx=pickNext(c);}
+            else{const e=c.e;c.s=clamp((c.x-e.A.x)*e.dx+(c.z-e.A.z)*e.dz,e.cA,e.L-e.cB-.5);}
+            c.vx=c.vz=c.w=0;c.rec={t:0,x:c.x,z:c.z,h:c.h};}
+          if(c.rec){c.rec.t+=dt;const k=Math.min(1,c.rec.t/1.6),sm=k*k*(3-2*k),e=c.e,tx=e.A.x+e.dx*c.s+e.rx*c.lo,tz=e.A.z+e.dz*c.s+e.rz*c.lo;
+            c.x=c.rec.x+(tx-c.rec.x)*sm;c.z=c.rec.z+(tz-c.rec.z)*sm;c.h=c.rec.h+angDiff(Math.atan2(e.dx,e.dz),c.rec.h)*sm;
+            if(k>=1){c.knock=false;c.rec=null;c.v=0;c.rest=0;c.ghost=2;}}
+          c.g.position.set(c.x,0,c.z);c.g.rotation.y=c.h;continue;}
+        const e=c.e;let tgt=(e.r.k==='av'?15:e.r.k==='tram'?11:12.5)*c.mul;
         if(c.mode==='run'){const dEnd=e.L-e.cB-c.s;if(c.nx.turn)tgt=Math.min(tgt,Math.sqrt(30+7*Math.max(0,dEnd)));
           if(e.B.light){const st=lightFor(e.ax),dS=e.stop-c.L/2-c.s;if(st!=='g'&&dS>-.8&&!(st==='a'&&dS<c.v*c.v/12))tgt=Math.min(tgt,dS<.4?0:Math.sqrt(9*dS));}}
         else if(c.nx.turn)tgt=Math.min(tgt,6.5);
         const fx=Math.sin(c.h),fz=Math.cos(c.h);
         const chk=(ox,oz,oL,lat)=>{const rx=ox-c.x,rz=oz-c.z,fd=rx*fx+rz*fz;if(fd<=0||fd>26)return;if(Math.abs(rx*fz-rz*fx)>lat)return;tgt=Math.min(tgt,Math.max(0,(fd-(c.L+oL)/2-2.4)*1.2));};
         if(c.ghost<=0)for(const o of TRAF)if(o!==c)chk(o.x,o.z,o.L,2.1);
+        for(const b of DISP)chk(b.x,b.z,b.L,2.2);
+        for(const p of PEDS)if(p.k)chk(p.k.x,p.k.z,1,2.2);
         if(PL)chk(PL.x,PL.z,4.4,2.4);
         c.v+=clamp(tgt-c.v,-10*dt,2.8*dt);if(c.v<0)c.v=0;
         if(c.v<.3&&tgt<.5){c.wait+=dt;if(c.wait>8){c.ghost=3;c.wait=0;}}else c.wait=0;if(c.ghost>0)c.ghost-=dt;
@@ -1035,6 +1054,7 @@ function buildPdcMap(s){
         if(c.mode==='turn'){c.u+=c.v*dt/c.bl;
           if(c.u>=1){const n=c.nx,e2=n.e;c.e=e2;c.lane=n.lane;c.lo=n.lo;c.s=e2.cA+(c.u-1)*c.bl;c.mode='run';c.nx=pickNext(c);c.x=e2.A.x+e2.dx*c.s+e2.rx*c.lo;c.z=e2.A.z+e2.dz*c.s+e2.rz*c.lo;c.h=Math.atan2(e2.dx,e2.dz);}
           else{const p=bez(c.P,c.u),d=bezD(c.P,c.u);c.x=p[0];c.z=p[1];if(d[0]||d[1])c.h=Math.atan2(d[0],d[1]);}}
+        c.vx=Math.sin(c.h)*c.v;c.vz=Math.cos(c.h)*c.v;
         c.g.position.set(c.x,0,c.z);c.g.rotation.y=c.h;}}
 
     // ===== Piétons sur les trottoirs =====
@@ -1044,10 +1064,80 @@ function buildPdcMap(s){
     const PPAL=[0x2b2b2b,0x3b4a66,0x7a2a2a,0xd9d9d9,0x556b2f,0x8a6a4a,0x1f3f6b,0xc9a227,A,Bc],PSK=[0x8d5524,0xc68642,0xe0ac69,0xf1c27d,0x5c3a1e];
     PEDS.forEach((p,k)=>{pB.setColorAt(k,col.setHex(RP(PPAL)));pH.setColorAt(k,col.setHex(RP(PSK)));});pB.instanceColor.needsUpdate=true;pH.instanceColor.needsUpdate=true;pB.castShadow=true;scene.add(pB,pH);
     let pT=0;
-    function pedUpdate(dt){pT+=dt;PEDS.forEach((p,k)=>{p.s+=p.dir*p.v*dt;if(p.s>p.sg.a1-1){p.s=p.sg.a1-1;p.dir=-1;}else if(p.s<p.sg.a0+1){p.s=p.sg.a0+1;p.dir=1;}
-      const r=p.sg.r,[x,z]=pt(r,p.s,p.off),bob=Math.abs(Math.sin(pT*7+p.ph))*.06;dm.rotation.set(0,r.o==='h'?(p.dir>0?Math.PI/2:-Math.PI/2):(p.dir>0?0:Math.PI),0);
+    // --- Passants percutés : projetés, tombent, restent au sol puis se relèvent ---
+    function pedKnock(p,x,z,vx,vz,vy){p.k={x,z,y:0,vx,vz,vy,ry:Math.atan2(vx,vz),fall:0,t:0};}
+    function pedTick(p,dt){const k=p.k;k.t+=dt;
+      if(k.y>0||k.vy>0){k.vy-=22*dt;k.y+=k.vy*dt;if(k.y<=0){k.y=0;k.vy=0;}}
+      const fr=Math.exp(-(k.y>0?.4:5)*dt);k.vx*=fr;k.vz*=fr;k.x+=k.vx*dt;k.z+=k.vz*dt;
+      for(const q of COLL){const dx=k.x-q.x,dz=k.z-q.z,ox=q.hw+.3-Math.abs(dx),oz=q.hd+.3-Math.abs(dz);if(ox<=0||oz<=0)continue;
+        if(ox<oz){k.x+=(Math.sign(dx)||1)*ox;k.vx*=-.3;}else{k.z+=(Math.sign(dz)||1)*oz;k.vz*=-.3;}}
+      if(k.t<2.8)k.fall=Math.min(Math.PI/2,k.fall+dt*7);else{k.fall=Math.max(0,k.fall-dt*3);if(k.fall===0&&k.y===0)return true;}
+      return false;}
+    function pedDraw(k,i,Bm,Hm){const s1=Math.sin(k.fall),c1=Math.cos(k.fall),lift=.15*s1+.02,h0=1.15;
+      dm.rotation.set(k.fall,k.ry,0,'YXZ');dm.position.set(k.x,k.y+lift,k.z);dm.scale.set(.45,.95,.3);dm.updateMatrix();Bm.setMatrixAt(i,dm.matrix);
+      dm.rotation.set(0,0,0,'XYZ');dm.position.set(k.x+Math.sin(k.ry)*s1*h0,k.y+lift+c1*h0,k.z+Math.cos(k.ry)*s1*h0);dm.scale.set(.34,.34,.34);dm.updateMatrix();Hm.setMatrixAt(i,dm.matrix);}
+    // Test de choc entre un véhicule V (x,z,h,vx,vz) et un passant en (px,pz). true = renversé, 'slow' = simple contact
+    function pedCheck(p,px,pz,V,player){const fx=Math.sin(V.h),fz=Math.cos(V.h),hl=V.L?V.L/2:2.1,t=clamp((px-V.x)*fx+(pz-V.z)*fz,-hl,hl),ex=px-(V.x+fx*t),ez=pz-(V.z+fz*t),d=Math.hypot(ex,ez);
+      if(d>1.3)return false;const sp=Math.hypot(V.vx,V.vz);if(sp<1.4)return'slow';
+      const nx=ex/(d||1),nz=ez/(d||1),side=1.2+sp*.12;pedKnock(p,px,pz,V.vx*.85+nx*side,V.vz*.85+nz*side,Math.min(7,1.4+sp*.22));
+      if(player){V.vx*=.96;V.vz*=.96;thud(Math.min(28,sp));}return true;}
+    function pedUpdate(dt,PL){pT+=dt;PEDS.forEach((p,k)=>{
+      if(p.k){if(pedTick(p,dt)){const r=p.sg.r;p.s=clamp(r.o==='h'?p.k.x:p.k.z,p.sg.a0+1,p.sg.a1-1);p.ret={x:p.k.x,z:p.k.z};p.k=null;}else{pedDraw(p.k,k,pB,pH);return;}}
+      const r=p.sg.r;let x,z,ry;
+      if(p.ret){const[tx,tz]=pt(r,p.s,p.off),dx=tx-p.ret.x,dz=tz-p.ret.z,d=Math.hypot(dx,dz);ry=Math.atan2(dx,dz);
+        if(d<.15){p.ret=null;x=tx;z=tz;}else{const st=Math.min(d,1.5*dt);p.ret.x+=dx/d*st;p.ret.z+=dz/d*st;x=p.ret.x;z=p.ret.z;}}
+      else{if(p.pause>0)p.pause-=dt;else{p.s+=p.dir*p.v*dt;if(p.s>p.sg.a1-1){p.s=p.sg.a1-1;p.dir=-1;}else if(p.s<p.sg.a0+1){p.s=p.sg.a0+1;p.dir=1;}}
+        [x,z]=pt(r,p.s,p.off);ry=r.o==='h'?(p.dir>0?Math.PI/2:-Math.PI/2):(p.dir>0?0:Math.PI);}
+      const hit=V=>Math.abs(V.x-x)<9&&Math.abs(V.z-z)<9?pedCheck(p,x,z,V,V===PL):false;
+      let h2=PL?hit(PL):false;if(!h2)for(const c of MOVING){h2=hit(c);if(h2===true)break;}
+      if(h2===true){pedDraw(p.k,k,pB,pH);return;}if(h2==='slow')p.pause=.8;
+      const bob=p.pause>0?0:Math.abs(Math.sin(pT*7+p.ph))*.06;dm.rotation.set(0,ry,0);
       dm.position.set(x,.14+bob,z);dm.scale.set(.45,.95,.3);dm.updateMatrix();pB.setMatrixAt(k,dm.matrix);dm.position.set(x,1.29+bob,z);dm.scale.set(.34,.34,.34);dm.updateMatrix();pH.setMatrixAt(k,dm.matrix);});
       pB.instanceMatrix.needsUpdate=true;pH.instanceMatrix.needsUpdate=true;}
+
+    // ===== Collisions entre véhicules (joueur, circulation, voitures garées) =====
+    const ALLB=TRAF.concat(PK),DISP=[];let MOVING=[];
+    function axisPt(b,px,pz){const fx=Math.sin(b.h),fz=Math.cos(b.h),hl=Math.max(0,b.L/2-.9),t=clamp((px-b.x)*fx+(pz-b.z)*fz,-hl,hl);return[b.x+fx*t,b.z+fz*t];}
+    function wake(b){if(b.isTraf){if(!b.knock){b.knock=true;b.vx=Math.sin(b.h)*b.v;b.vz=Math.cos(b.h)*b.v;b.w=0;b.v=0;}b.rec=null;b.rest=0;}
+      else{b.mov=true;b.rest=0;if(!b.disp){b.disp=true;DISP.push(b);}}}
+    // Impulsion entre a et b (n va de b vers a), avec rotation induite selon le point d'impact
+    function impulse(a,b,nx,nz,pen,cx,cz,e){const inv=1/a.m+1/b.m;
+      a.x+=nx*pen/a.m/inv;a.z+=nz*pen/a.m/inv;b.x-=nx*pen/b.m/inv;b.z-=nz*pen/b.m/inv;
+      const vr=(a.vx-b.vx)*nx+(a.vz-b.vz)*nz;if(vr>=0)return 0;
+      const j=-(1+e)*vr/inv,Jx=j*nx,Jz=j*nz;a.vx+=Jx/a.m;a.vz+=Jz/a.m;b.vx-=Jx/b.m;b.vz-=Jz/b.m;
+      [[a,1],[b,-1]].forEach(([o,sg])=>{if(o.w===undefined)return;const rx=cx-o.x,rz=cz-o.z,I=o.m*(o.L*o.L+4)/12;o.w=clamp(o.w+sg*(rz*Jx-rx*Jz)/I,-6,6);});
+      return -vr;}
+    function hitPlayer(PL,R){let imp=0;
+      for(const b of ALLB){if(Math.abs(b.x-PL.x)>9||Math.abs(b.z-PL.z)>9)continue;
+        const[cx,cz]=axisPt(b,PL.x,PL.z),ex=PL.x-cx,ez=PL.z-cz,d=Math.hypot(ex,ez),rr=b.rad+R;if(d>=rr||d<1e-4)continue;
+        const nx=ex/d,nz=ez/d,vr=(PL.vx-b.vx)*nx+(PL.vz-b.vz)*nz;
+        if(vr<-.4){wake(b);imp=Math.max(imp,impulse(PL,b,nx,nz,rr-d,cx,cz,.25));}
+        else if((b.knock&&!b.rec)||b.mov)impulse(PL,b,nx,nz,rr-d,cx,cz,.25);
+        else{PL.x+=nx*(rr-d);PL.z+=nz*(rr-d);}}
+      return imp;}
+    function solveStatic(b,px,pz,r){let ox2=0,oz2=0;const push=(nx,nz,pen)=>{b.x+=nx*pen;b.z+=nz*pen;px+=nx*pen;pz+=nz*pen;const vn=b.vx*nx+b.vz*nz;if(vn<0){b.vx-=1.3*vn*nx;b.vz-=1.3*vn*nz;b.w*=.7;}};
+      for(const q of COLL){const dx=px-q.x,dz=pz-q.z;if(Math.abs(dx)>q.hw+r||Math.abs(dz)>q.hd+r)continue;
+        const ex=dx-clamp(dx,-q.hw,q.hw),ez=dz-clamp(dz,-q.hd,q.hd),d=Math.hypot(ex,ez);
+        if(d<1e-4){const ox=q.hw-Math.abs(dx),oz=q.hd-Math.abs(dz);if(ox<oz)push(Math.sign(dx)||1,0,ox+r);else push(0,Math.sign(dz)||1,oz+r);}else if(d<r)push(ex/d,ez/d,r-d);}
+      for(const c of CIRC){const dx=px-c.x,dz=pz-c.z,d=Math.hypot(dx,dz),rr=c.r+r;if(d<rr&&d>1e-4)push(dx/d,dz/d,rr-d);}
+      for(const e of ELLS){const ax=e.a+r,bz=e.b+r,f=(px/ax)*(px/ax)+(pz/bz)*(pz/bz);if(f<1&&f>1e-6){const k=1/Math.sqrt(f);let gx=px/(ax*ax),gz=pz/(bz*bz);const gl=Math.hypot(gx,gz)||1;push(gx/gl,gz/gl,Math.hypot(px*k-px,pz*k-pz));}}}
+    function dynStep(dt){MOVING=ALLB.filter(b=>(b.knock&&!b.rec)||b.mov);
+      for(const b of MOVING){
+        b.x+=b.vx*dt;b.z+=b.vz*dt;b.h+=b.w*dt;
+        const sp=Math.hypot(b.vx,b.vz);if(sp>0){const ns=Math.max(0,sp-6.5*dt)/sp;b.vx*=ns;b.vz*=ns;}b.w*=Math.exp(-2.4*dt);if(Math.abs(b.w)<.03)b.w=0;
+        const fx=Math.sin(b.h),fz=Math.cos(b.h),hl=Math.max(0,b.L/2-.9),pts=hl>3?[-hl,-hl/3,hl/3,hl]:[-hl,0,hl];
+        for(const t of pts)solveStatic(b,b.x+fx*t,b.z+fz*t,b.rad);
+        b.x=clamp(b.x,-BOUND,BOUND);b.z=clamp(b.z,-BOUND,BOUND);
+        for(const o of ALLB){if(o===b||Math.abs(o.x-b.x)>9||Math.abs(o.z-b.z)>9)continue;
+          for(const t of pts){const px=b.x+fx*t,pz=b.z+fz*t,[cx,cz]=axisPt(o,px,pz),ex=px-cx,ez=pz-cz,d=Math.hypot(ex,ez),rr=b.rad+o.rad;if(d>=rr||d<1e-4)continue;
+            const nx=ex/d,nz=ez/d,vr=(b.vx-o.vx)*nx+(b.vz-o.vz)*nz;if(vr<-.3)wake(o);
+            if(o.knock||o.mov)impulse(b,o,nx,nz,rr-d,cx,cz,.2);else{b.x+=nx*(rr-d);b.z+=nz*(rr-d);const vn=b.vx*nx+b.vz*nz;if(vn<0){b.vx-=1.2*vn*nx;b.vz-=1.2*vn*nz;}}
+            break;}}
+        if(Math.hypot(b.vx,b.vz)<.25&&!b.w)b.rest+=dt;else b.rest=0;
+        if(b.mov&&b.rest>.6){b.mov=false;b.vx=b.vz=b.w=0;}
+        if(b.isTraf){b.g.position.set(b.x,0,b.z);b.g.rotation.y=b.h;}else pkSet(b);}
+      if(MOVING.some(b=>!b.isTraf))[pkB,pkC,pkS].forEach(m=>m.instanceMatrix.needsUpdate=true);
+      MOVING=MOVING.filter(b=>Math.hypot(b.vx,b.vz)>2);}
 
     // ===== Plan pré-rendu pour la mini-carte =====
     const MO=480,MS=2,MC=document.createElement('canvas');MC.width=MC.height=2*MO*MS;
@@ -1062,7 +1152,8 @@ function buildPdcMap(s){
       const r=best.r,hx=r.o==='h',fw=hx?Math.sin(h):Math.cos(h),sg=fw>=0?1:-1,al=clamp(best.al,r.a+8,r.b-8),[px,pz]=pt(r,al,(hx?sg:-sg)*LO(r,0));
       return{x:px,z:pz,h:hx?(sg>0?Math.PI/2:-Math.PI/2):(sg>0?0:Math.PI)};}
     return{RD,SEGS,NODES,CELLS,TRAF,bound:BOUND,mapCanvas:MC,mapOff:MO,mapScale:MS,nearestLane,
-      update(dt,PL){LT+=dt;setLamps();trafficUpdate(dt,PL);pedUpdate(dt);}};
+      PK,PEDS,hitPlayer,pedTick,pedDraw,pedCheck,
+      update(dt,PL){LT+=dt;setLamps();dynStep(dt);trafficUpdate(dt,PL);pedUpdate(dt,PL);}};
   })();
 
   // ---------- Animation ----------
@@ -1074,7 +1165,12 @@ function buildPdcMap(s){
       if(!tramS.stopped&&prev<6&&tramS.x>=6){tramS.x=6;tramS.wait=5;tramS.stopped=true;}
       if(tramS.x>360){tramS.x=-345;tramS.stopped=false;}}
     tram.position.x=tramS.x;
-    peds.forEach((p,k)=>{const dx=p.tx-p.x,dz=p.tz-p.z,d=Math.hypot(dx,dz);if(d<0.3){const [x,z]=prand();p.tx=x;p.tz=z;}else{p.x+=dx/d*p.v*dt;p.z+=dz/d*p.v*dt;}
+    const PL=ST.api&&ST.api.player;
+    peds.forEach((p,k)=>{
+      if(p.k){if(city.pedTick(p,dt)){p.x=p.k.x;p.z=p.k.z;p.k=null;}else{city.pedDraw(p.k,k,pb,ph);return;}}
+      if(PL&&Math.abs(PL.x-p.x)<9&&Math.abs(PL.z-p.z)<9){const h2=city.pedCheck(p,p.x,p.z,PL,true);if(h2===true){city.pedDraw(p.k,k,pb,ph);return;}if(h2==='slow')p.pause=.8;}
+      if(p.pause>0){p.pause-=dt;return;}
+      const dx=p.tx-p.x,dz=p.tz-p.z,d=Math.hypot(dx,dz);if(d<0.3){const [x,z]=prand();p.tx=x;p.tz=z;}else{p.x+=dx/d*p.v*dt;p.z+=dz/d*p.v*dt;}
       const bob=Math.abs(Math.sin(tt*7+p.ph))*0.06;dm.rotation.set(0,Math.atan2(dx,dz),0);
       dm.position.set(p.x,0.06+bob,p.z);dm.scale.set(0.45,0.95,0.3);dm.updateMatrix();pb.setMatrixAt(k,dm.matrix);
       dm.position.set(p.x,1.21+bob,p.z);dm.scale.set(0.34,0.34,0.34);dm.updateMatrix();ph.setMatrixAt(k,dm.matrix);});
@@ -1082,7 +1178,6 @@ function buildPdcMap(s){
     ST.flags.forEach((fl,k)=>fl.rotation.y=Math.sin(tt*2.2+k)*0.35);
     if(ST.screen){ST.screen.t+=dt;if(ST.screen.t>4.5){ST.screen.t=0;ST.screen.i=(ST.screen.i+1)%ST.screen.slides.length;ST.screen.slides[ST.screen.i]();ST.screen.tex.needsUpdate=true;}}
     if(ST.night&&ST.halo)ST.halo.material.opacity=.75+.2*Math.sin(tt*1.6);
-    const PL=ST.api&&ST.api.player;
     city.update(dt,PL);
     if(PL){sun.position.set(PL.x+70,120,PL.z+60);sun.target.position.set(PL.x,0,PL.z);sun.target.updateMatrixWorld();}
   };
@@ -1222,7 +1317,7 @@ function disposeCar(P){P.root.traverse(o=>{if(o.geometry&&o.geometry!==undefined
 let PC=buildCar(S.car,{lights:true});
 function rebuildPlayer(){const parent=PC.root.parent,pos=PC.root.position.clone(),rot=PC.root.rotation.y;parent.remove(PC.root);disposeCar(PC);PC=buildCar(S.car,{lights:true});PC.root.position.copy(pos);PC.root.rotation.y=rot;parent.add(PC.root);}
 
-const car={x:0,z:0,h:PI/2,vx:0,vz:0,steer:0,nitro:stats().nitro,vF:0,vR:0,speed:0,angle:0,drifting:false,braking:false,boost:false,placed:false};
+const car={x:0,z:0,h:PI/2,vx:0,vz:0,steer:0,nitro:stats().nitro,vF:0,vR:0,speed:0,angle:0,drifting:false,braking:false,boost:false,placed:false,m:1};
 
 /* ================= ÉTAT ================= */
 let ui='title',camMode=0,shake=0,titleT=0;
@@ -1252,7 +1347,7 @@ function collidePdc(R){let impact=0;const hit=(nx,nz,pen)=>{car.x+=nx*pen;car.z+
     if(f<1){const k=f>1e-6?1/Math.sqrt(f):1;let gx=dx/(ax*ax),gz=dz/(bz*bz);const gl=Math.hypot(gx,gz)||1;gx/=gl;gz/=gl;car.x=dx*k;car.z=dz*k;if(f<=1e-6)car.z=bz;
       const vn=car.vx*gx+car.vz*gz;if(vn<0){car.vx-=1.35*vn*gx;car.vz-=1.35*vn*gz;impact=Math.max(impact,-vn);}}}
   const cap=(x,z,fx,fz,hl,rad)=>{const dx=car.x-x,dz=car.z-z,t=clamp(dx*fx+dz*fz,-hl,hl),ex=car.x-(x+fx*t),ez=car.z-(z+fz*t),d=Math.hypot(ex,ez),rr=rad+R;if(d<rr&&d>1e-4)hit(ex/d,ez/d,rr-d);};
-  for(const c of PDC.city.TRAF)cap(c.x,c.z,Math.sin(c.h),Math.cos(c.h),Math.max(0,c.L/2-.9),.95);
+  impact=Math.max(impact,PDC.city.hitPlayer(car,R));
   for(let k=0;k<3;k++)cap(PDC.tram.x-k*7.6,PDC.zMain,1,0,2.3,1.3);
   return impact;}
 function updSmoke(dt){for(const p of smoke){if(p.life<=0)continue;p.life-=dt*.9;const k=1-p.life;p.s.scale.set(1.5+k*5,1.5+k*5,1);p.s.position.y+=dt*1.2;p.s.material.opacity=Math.max(0,p.life)*.35;if(p.life<=0)p.s.visible=false;}}
