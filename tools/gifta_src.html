@@ -137,13 +137,13 @@ const FAC={
   eiffelBase:facade({bx:8,fy:1,bw:1.6,fh:6.4,phong:1,draw(g,o){for(let b=0;b<8;b++){const x=b*o.bw;o.glass(x+2,0,o.bw-4,o.H,'#9fb4c2','#334452');o.lit(x+2,0,o.bw-4,o.H,.5);g.fillStyle='#2b3138';g.fillRect(x,0,4,o.H);}g.fillStyle='#2b3138';g.fillRect(0,o.H*.42,o.W,5);g.fillRect(0,0,o.W,6);}}),
   eiffelTop:facade({bx:4,fy:2,bw:3,fh:16.3/2-3.5,phong:1,draw(g,o){for(let f=0;f<2;f++){const y=f*o.fh;const gr=g.createLinearGradient(0,y,0,y+o.fh);gr.addColorStop(0,'#f4f7f9');gr.addColorStop(1,'#d7e0e7');g.fillStyle=gr;g.fillRect(0,y,o.W,o.fh);
       g.fillStyle='rgba(120,140,160,.25)';for(let b=0;b<8;b++)g.fillRect(b*o.W/8,y,2,o.fh);const wy=y+o.fh*.38,wh=o.fh*.28;o.glass(0,wy,o.W,wh,'#8ea6b8','#3a4b5a');for(let b=0;b<4;b++)o.lit(b*o.bw+3,wy,o.bw-6,wh,.45);g.fillStyle='#596570';for(let b=0;b<=8;b++)g.fillRect(b*o.W/8-1,wy,3,wh);}}}),
-  // Bouygues (Gigon/Guyer) : panneaux de céramique émaillée crème et beige, lisses ou rainurés, fenêtres sombres groupées
-  bouygues:facade({bx:4,fy:4,bw:2.6,fh:16.3/4,draw(g,o){const P=['#e9e2cf','#ded5bf','#efe9da','#e4dcc6'];for(let f=0;f<4;f++)for(let b=0;b<4;b++){const x=b*o.bw,y=f*o.fh;g.fillStyle=RP(P);g.fillRect(x,y,o.bw,o.fh);
-      if(R()<.6){g.fillStyle='rgba(120,105,80,.13)';for(let xx=4;xx<o.bw;xx+=7)g.fillRect(x+xx,y,2,o.fh);}g.fillStyle='rgba(0,0,0,.08)';g.fillRect(x,y+o.fh-3,o.bw,3);
-      const wx=x+o.bw*.18,wy=y+o.fh*.2,w=o.bw*.64,h=o.fh*.58;g.fillStyle='#2c3238';g.fillRect(wx-4,wy-4,w+8,h+8);o.glass(wx,wy,w,h,'#7f93a2','#26313b');o.lit(wx,wy,w,h,.4);g.fillStyle='#2c3238';g.fillRect(wx+w*.5-2,wy,4,h);g.fillRect(wx,wy+h*.62,w,4);}}}),
-  // Bréguet réhabilité : panneaux de béton préfabriqué blanc, fenêtres neuves en tableau profond
-  breguet:facade({bx:4,fy:4,bw:3.6,fh:3.45,draw(g,o){g.fillStyle='#f1efe9';g.fillRect(0,0,o.W,o.H);for(let f=0;f<4;f++)for(let b=0;b<4;b++){const x=b*o.bw,y=f*o.fh;g.fillStyle='rgba(0,0,0,.09)';g.fillRect(x+o.bw-3,y,3,o.fh);g.fillRect(x,y+o.fh-3,o.bw,3);
-      const wx=x+o.bw*.2,wy=y+o.fh*.2,w=o.bw*.6,h=o.fh*.56;g.fillStyle='#bdb9af';g.fillRect(wx-8,wy-8,w+16,h+16);g.fillStyle='#8f8b82';g.fillRect(wx-8,wy-8,w+16,8);g.fillRect(wx-8,wy-8,8,h+16);o.glass(wx,wy,w,h,'#b8cad6','#4d6172');o.lit(wx,wy,w,h,.42);g.fillStyle='#4a5158';g.fillRect(wx+w/2-2,wy,4,h);}}}),
+  // Bouygues (Gigon/Guyer) : panneaux de céramique crème rainurés, grandes baies sombres
+  bouygues:facade({bx:4,fy:4,bw:2.2,fh:16.3/4,draw(g,o){for(let f=0;f<4;f++)for(let b=0;b<4;b++){const x=b*o.bw,y=f*o.fh;g.fillStyle=R()<.5?'#ece6d6':'#e3dcc8';g.fillRect(x,y,o.bw,o.fh);
+      g.fillStyle='rgba(120,105,80,.12)';for(let xx=3;xx<o.bw;xx+=6)g.fillRect(x+xx,y,2,o.fh);g.fillStyle='rgba(0,0,0,.07)';g.fillRect(x,y+o.fh-3,o.bw,3);
+      if(R()<.75){const wx=x+o.bw*.08,wy=y+o.fh*.12,w=o.bw*.84,h=o.fh*.74;g.fillStyle='#1f2429';g.fillRect(wx-3,wy-3,w+6,h+6);o.glass(wx,wy,w,h,'#6f8290','#1d262e');o.lit(wx,wy,w,h,.4);g.fillStyle='#1f2429';g.fillRect(wx+w*.5-2,wy,4,h);}}}}),
+  // Bréguet réhabilité : bandeaux blancs horizontaux et fenêtres en bandeau continues
+  breguet:facade({bx:8,fy:2,bw:1.5,fh:3.45,phong:1,draw(g,o){for(let f=0;f<2;f++){const y=f*o.fh;g.fillStyle='#f6f6f3';g.fillRect(0,y,o.W,o.fh*.42);g.fillStyle='rgba(0,0,0,.06)';g.fillRect(0,y+o.fh*.4,o.W,4);
+      const wy=y+o.fh*.42,wh=o.fh*.58;o.glass(0,wy,o.W,wh,'#b4cad6','#3f5565');for(let b=0;b<8;b++){o.lit(b*o.bw+3,wy,o.bw-6,wh,.45);g.fillStyle='#d9dde0';g.fillRect(b*o.bw-1,wy,3,wh);}g.fillStyle='#e9ecee';g.fillRect(0,wy+wh*.12,o.W,2);}}}),
   // ENS (Renzo Piano) : grands panneaux de béton clair ; galerie vitrée coiffée de lames solaires sombres
   ens:facade({bx:2,fy:2,bw:3.6,fh:3.6,draw(g,o){g.fillStyle='#ddd6c8';g.fillRect(0,0,o.W,o.H);for(let f=0;f<2;f++)for(let b=0;b<2;b++){const x=b*o.bw,y=f*o.fh;g.fillStyle=R()<.5?'rgba(255,255,255,.08)':'rgba(0,0,0,.04)';g.fillRect(x,y,o.bw,o.fh);g.fillStyle='rgba(90,80,60,.25)';g.fillRect(x,y,o.bw,3);g.fillRect(x,y,3,o.fh);
       if(R()<.35){const wx=x+o.bw*.42,wy=y+o.fh*.12,w=o.bw*.16,h=o.fh*.76;o.glass(wx,wy,w,h);o.lit(wx,wy,w,h,.5);}}}}),
@@ -239,6 +239,7 @@ function build(){
   A.mark&&A.mark.mesh(new T.MeshBasicMaterial({color:0xffffff}),false,false);
   for(const k in FAC)if(A['f_'+k])A['f_'+k].mesh(FAC[k].mat,true);
   A.roof&&A.roof.mesh(new T.MeshLambertMaterial({map:TX.gravel}),true);
+  A.green&&A.green.mesh(new T.MeshLambertMaterial({map:TX.wood}),true);
   A.solid&&A.solid.mesh(new T.MeshLambertMaterial({color:0xffffff}),true);
   A.metal&&A.metal.mesh(new T.MeshPhongMaterial({color:0xffffff,shininess:60,specular:0x666666}),true);
   if(A.etfe){const m=new T.MeshPhongMaterial({map:TX.etfe,transparent:true,opacity:.8,side:T.DoubleSide,shininess:80,specular:0xffffff,emissive:0xfff3dc,emissiveIntensity:0,depthWrite:false});NIGHT.push([m,.55]);A.etfe.mesh(m,false,false);}
@@ -272,11 +273,16 @@ function building([h,mh,kind,p,hs,key]){
       if(key==='eiffel'&&!hole){const m=acc('solid');m.quad([A2[1][0]+nx*1.4,7.2,A2[1][1]+nz*1.4],[A2[0][0]+nx*1.4,7.2,A2[0][1]+nz*1.4],[A2[0][0],7.2,A2[0][1]],[A2[1][0],7.2,A2[1][1]],C(0x2a2f35));
         m.quad([A2[0][0]+nx*1.4,6.4,A2[0][1]+nz*1.4],[A2[1][0]+nx*1.4,6.4,A2[1][1]+nz*1.4],[A2[1][0]+nx*1.4,7.2,A2[1][1]+nz*1.4],[A2[0][0]+nx*1.4,7.2,A2[0][1]+nz*1.4],C(0x262b31));
         m.quad([A2[0][0],6.4,A2[0][1]],[A2[1][0],6.4,A2[1][1]],[A2[1][0]+nx*1.4,6.4,A2[1][1]+nz*1.4],[A2[0][0]+nx*1.4,6.4,A2[0][1]+nz*1.4],C(0x1c2025));}
-      if(key==='breguet'&&!hole&&(nz>.5||nx<-.5)){const m=acc('metal'),mc=C(0xb7bec4),dx=(A2[1][0]-A2[0][0])/L,dz=(A2[1][1]-A2[0][1])/L;
+      if(key==='bouygues'&&!hole){const m=acc('metal'),wc=C(0xf1efe9),dx=(A2[1][0]-A2[0][0])/L,dz=(A2[1][1]-A2[0][1])/L;
+        for(let t=2.2;t<L-1;t+=4.4){const x=A2[0][0]+dx*t,z=A2[0][1]+dz*t;obox(m,x+nx*.32,z+nz*.32,dx,dz,.55,.64,0,y1-1.3,wc);}
+        const o1=.9,P0=[A2[0][0]+nx*o1,A2[0][1]+nz*o1],P1=[A2[1][0]+nx*o1,A2[1][1]+nz*o1],ya=y1-1.4,yb=y1+.4;
+        m.quad([P0[0],ya,P0[1]],[P1[0],ya,P1[1]],[P1[0],yb,P1[1]],[P0[0],yb,P0[1]],wc);m.quad([A2[0][0],ya,A2[0][1]],[A2[1][0],ya,A2[1][1]],[P1[0],ya,P1[1]],[P0[0],ya,P0[1]],C(0xd9d6cf));
+        m.quad([P0[0],yb,P0[1]],[P1[0],yb,P1[1]],[A2[1][0],yb,A2[1][1]],[A2[0][0],yb,A2[0][1]],wc);}
+      if(false){const m=acc('metal'),mc=C(0xb7bec4),dx=(A2[1][0]-A2[0][0])/L,dz=(A2[1][1]-A2[0][1])/L;
         for(let t=.6;t<L-.3;t+=1.2){const x=A2[0][0]+dx*t,z=A2[0][1]+dz*t;obox(m,x+nx*.28,z+nz*.28,nx,nz,.56,.09,1.2,y1-.2,mc);}}}};
   walls(outer,false);holes.forEach(r=>walls(r,true));
   if(y0>.3)fillPoly(acc('solid'),outer,holes,y0,C(0xb8bcbf),8,true);
-  fillPoly(acc('roof'),outer,holes,y1+.02,roofC,6);
+  if(key==='breguet')fillPoly(acc('green'),outer,holes,y1+.02,C(0x7fa35a),5);else fillPoly(acc('roof'),outer,holes,y1+.02,roofC,6);
   const O=obb(outer);
   // toits techniques sur les grands bâtiments ordinaires
   if((key==='lab'||key==='off'||key==='res')&&big>600){const m=acc('solid');for(let k=0,n=Math.min(4,1+Math.floor(big/1500));k<n;k++){const u=RR(-.35,.35)*O.L,v=RR(-.3,.3)*O.W,x=O.cx+O.ux*u+O.vx*v,z=O.cz+O.uz*u+O.vz*v;if(!pip(x,z,outer))continue;obox(m,x,z,O.ux,O.uz,RR(2,4.5),RR(1.6,3),y1,y1+RR(1.2,2.4),C(0xa4a8ab));}}
@@ -286,8 +292,14 @@ function building([h,mh,kind,p,hs,key]){
     for(let u=-O.L/2+6;u<O.L/2;u+=14)for(let v=-O.W/2+6;v<O.W/2;v+=14){const x=O.cx+O.ux*u+O.vx*v,z=O.cz+O.uz*u+O.vz*v;if(pip(x,z,outer))obox(m,x,z,O.ux,O.uz,.35,.35,y1,ty,mc);}}
   if(key==='bouygues'){// angles en retrait marqués par de hautes colonnes
     const m=acc('metal'),wc=C(0xeceae4);for(const [s,t] of[[-1,-1],[1,-1],[1,1],[-1,1]]){const cxp=O.cx+O.ux*O.L/2*s*.97+O.vx*O.W/2*t*.95,czp=O.cz+O.uz*O.L/2*s*.97+O.vz*O.W/2*t*.95;if(pip(cxp,czp,outer))continue;
-      for(const [du,dv] of[[0,0],[-s*4.2,0],[-s*8.4,0],[-s*12.6,0],[0,-t*4.2],[0,-t*8.4],[0,-t*12.6]]){const x=cxp+O.ux*du+O.vx*dv,z=cxp===cxp?czp+O.uz*du+O.vz*dv:0;if(pip(x,z,outer))continue;obox(m,x,z,O.ux,O.uz,.9,.9,0,y1+.3,wc);addCirc(x,z,.55);}}}
-  if(key==='breguet')holes.forEach(hh=>fillPoly(acc('groof'),hh,[],y1+.4,WHITE,6));
+      const PO=[];for(const [du,dv] of[[0,0],[-s*5,0],[-s*10,0],[-s*15,0],[-s*20,0],[-s*25,0],[0,-t*5],[0,-t*10],[0,-t*15],[0,-t*20]]){const x=cxp+O.ux*du+O.vx*dv,z=cxp===cxp?czp+O.uz*du+O.vz*dv:0;if(pip(x,z,outer))continue;obox(m,x,z,O.ux,O.uz,1.05,1.05,0,y1-1.4,wc);addCirc(x,z,.6);PO.push([x,z]);}
+      // dalle de couronnement du portique (relie les colonnes à la façade)
+      const cx2=cxp-O.ux*s*12.5-O.vx*t*10+O.ux*s*.6+O.vx*t*.6,cz2=czp-O.uz*s*12.5-O.vz*t*10+O.uz*s*.6+O.vz*t*.6;if(PO.length)obox(m,cx2,cz2,O.ux,O.uz,26.2,21.2,y1-1.4,y1+.4,wc);}}
+  if(key==='breguet'){holes.forEach(hh=>fillPoly(acc('groof'),hh,[],y1+.4,WHITE,6));
+    // verrières en sheds sur les toits (comme sur la vue aérienne)
+    const S=acc('groof');for(let k=0;k<7;k++){const u=RR(-.38,.38)*O.L,v=RR(-.32,.32)*O.W,x=O.cx+O.ux*u+O.vx*v,z=O.cz+O.uz*u+O.vz*v;if(!pip(x,z,outer))continue;
+      const L2=RR(8,16),W2=RR(5,9),P=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([a,b])=>[x+O.ux*L2/2*a+O.vx*W2/2*b,z+O.uz*L2/2*a+O.vz*W2/2*b]);if(!P.every(q=>pip(q[0],q[1],outer)))continue;
+      S.quad([P[3][0],y1+1.2,P[3][1]],[P[2][0],y1+1.2,P[2][1]],[P[1][0],y1+.3,P[1][1]],[P[0][0],y1+.3,P[0][1]],WHITE,[0,0,L2/4,W2/4]);}}
   if(key==='ens_n'){// atrium : longue verrière à lames sur l'axe du bâtiment + 4 cheminées à vent
     const sw=Math.min(12,O.W*.32),sl=O.L*.86,S=acc('skyl'),ty=y1+1.6,P=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([s,t])=>[O.cx+O.ux*sl/2*s+O.vx*sw/2*t,O.cz+O.uz*sl/2*s+O.vz*sw/2*t]);
     S.quad([P[3][0],ty,P[3][1]],[P[2][0],ty,P[2][1]],[P[1][0],ty,P[1][1]],[P[0][0],ty,P[0][1]],WHITE,[0,0,sl/4,sw/4]);
