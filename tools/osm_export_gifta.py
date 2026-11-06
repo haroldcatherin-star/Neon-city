@@ -106,7 +106,7 @@ for t,o,holes in polys:
         n=t.get('name')
         KEY={'CentraleSupélec - Bâtiment Gustave Eiffel':'eiffel','CentraleSupélec - Bâtiment Francis Bouygues':'bouygues','CentraleSupélec - Bâtiment Bréguet':'breguet','Lieu de vie':'ldv',
           "Bâtiment Nord de l'École Normale Supérieure Paris-Saclay":'ens_n',"Bâtiment Est de l'École Normale Supérieure Paris-Saclay":'ens',"Bâtiment Ouest de l'École Normale Supérieure Paris-Saclay":'ens',
-          "Bâtiment Sud-Est de l'École Normale Supérieure Paris-Saclay":'ens_s',"Bâtiment Sud-Ouest de l'École Normale Supérieure Paris-Saclay":'ens_s'}
+          "Bâtiment Sud-Est de l'École Normale Supérieure Paris-Saclay":'ens_s',"Bâtiment Sud-Ouest de l'École Normale Supérieure Paris-Saclay":'ens_s','Lumen':'lumen','Université Paris-Saclay':'gare'}
         typ=t.get('building');cat='res' if typ in('dormitory','apartments','residential','house','detached') else 'off' if typ in('office','commercial') else 'lab'
         B.append([round(h,1),round(mh,1),kind,F(o[:-1]),[F(hh[:-1]) for hh in holes if any(inb(p,40) for p in hh)],KEY.get(n,cat)])
         if n in LABELS and n not in seen:

@@ -250,6 +250,9 @@ function disc(a,x,z,r,y,col,s){s=s||6;for(let k=0;k<12;k++){const a1=k/12*2*PI,a
 // boîte orientée (repères, cheminées, poteaux)
 function obox(a,cx,cz,ux,uz,L,W,y0,y1,col){const vx=-uz,vz=ux,P=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([s,t])=>[cx+ux*L/2*s+vx*W/2*t,cz+uz*L/2*s+vz*W/2*t]);
   for(let i=0;i<4;i++){const p=P[i],q=P[(i+1)%4];a.quad([q[0],y0,q[1]],[p[0],y0,p[1]],[p[0],y1,p[1]],[q[0],y1,q[1]],col);}a.quad([P[3][0],y1,P[3][1]],[P[2][0],y1,P[2][1]],[P[1][0],y1,P[1][1]],[P[0][0],y1,P[0][1]],col);}
+function beam(a,P,Q,t,col){const d=[Q[0]-P[0],Q[1]-P[1],Q[2]-P[2]],l=Math.hypot(...d)||1;d[0]/=l;d[1]/=l;d[2]/=l;let u=Math.abs(d[1])<.9?[d[2],0,-d[0]]:[1,0,0];const ul=Math.hypot(...u);u=u.map(x=>x/ul);
+  const v=[d[1]*u[2]-d[2]*u[1],d[2]*u[0]-d[0]*u[2],d[0]*u[1]-d[1]*u[0]],h=t/2,C4=[[1,1],[-1,1],[-1,-1],[1,-1]].map(([p,q])=>[u[0]*p*h+v[0]*q*h,u[1]*p*h+v[1]*q*h,u[2]*p*h+v[2]*q*h]);
+  for(let i=0;i<4;i++){const c0=C4[i],c1=C4[(i+1)%4];a.quad([P[0]+c0[0],P[1]+c0[1],P[2]+c0[2]],[P[0]+c1[0],P[1]+c1[1],P[2]+c1[2]],[Q[0]+c1[0],Q[1]+c1[1],Q[2]+c1[2]],[Q[0]+c0[0],Q[1]+c0[1],Q[2]+c0[2]],col);}}
 function obb(pts){let cx=0,cz=0;for(const p of pts){cx+=p[0];cz+=p[1];}cx/=pts.length;cz/=pts.length;let a=0,b=0,c=0;for(const p of pts){const x=p[0]-cx,z=p[1]-cz;a+=x*x;b+=x*z;c+=z*z;}
   const an=.5*Math.atan2(2*b,a-c),ux=Math.cos(an),uz=Math.sin(an),vx=-uz,vz=ux;let u0=1e9,u1=-1e9,v0=1e9,v1=-1e9;for(const p of pts){const x=p[0]-cx,z=p[1]-cz,u=x*ux+z*uz,v=x*vx+z*vz;u0=Math.min(u0,u);u1=Math.max(u1,u);v0=Math.min(v0,v);v1=Math.max(v1,v);}
   const mu=(u0+u1)/2,mv=(v0+v1)/2;return{cx:cx+ux*mu+vx*mv,cz:cz+uz*mu+vz*mv,ux,uz,vx,vz,L:u1-u0,W:v1-v0};}
@@ -311,6 +314,7 @@ function build(){
   A.roof&&A.roof.mesh(new T.MeshLambertMaterial({map:TX.gravel}),true);
   A.green&&A.green.mesh(new T.MeshLambertMaterial({map:TX.wood}),true);
   A.solid&&A.solid.mesh(new T.MeshLambertMaterial({color:0xffffff}),true);
+  A.frame&&A.frame.mesh(new T.MeshPhongMaterial({color:0xffffff,shininess:50,specular:0x555555,side:T.DoubleSide}),true);
   A.metal&&A.metal.mesh(new T.MeshPhongMaterial({color:0xffffff,shininess:60,specular:0x666666}),true);
   if(A.etfe){const m=new T.MeshPhongMaterial({map:TX.etfe,transparent:true,opacity:.8,side:T.DoubleSide,shininess:80,specular:0xffffff,emissive:0xfff3dc,emissiveIntensity:0,depthWrite:false});NIGHT.push([m,.55]);A.etfe.mesh(m,false,false);}
   if(A.skyl){const m=new T.MeshPhongMaterial({map:TX.skylight,shininess:90,specular:0xaabbcc,emissive:0xfff0d0,emissiveIntensity:0});NIGHT.push([m,.6]);A.skyl.mesh(m,true);}
@@ -325,7 +329,8 @@ function building([h,mh,kind,p,hs,key]){
   const outer=pairs(p),holes=hs.map(pairs),y0=mh,y1=Math.max(h,mh+1),big=Math.abs(area2(outer));
   if(kind===1){// auvent
     fillPoly(acc('solid'),outer,holes,y1,C(0xd8dbdd),8);fillPoly(acc('solid'),outer,holes,y1-.3,C(0xe6e8ea),8,true);return;}
-  const sty=key in FAC?key:key==='ens_n'||key==='ens_s'?'ens':key==='lab'?(big>2500&&h>12?'off':'lab'):key;
+  if(key==='gare'){stationHall(outer,h);return;}
+  const sty=key==='lumen'?'ensglass':key in FAC?key:key==='ens_n'||key==='ens_s'?'ens':key==='lab'?(big>2500&&h>12?'off':'lab'):key;
   const walls=(ring,hole)=>{const ccw=area2(ring)>0,out=hole?!ccw:ccw;let run=0;
     for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.05)continue;
       let nx=(b[1]-a[1])/L,nz=-(b[0]-a[0])/L;if(!out){nx=-nx;nz=-nz;}// normale extérieure (vers le vide)
@@ -352,10 +357,18 @@ function building([h,mh,kind,p,hs,key]){
         for(let t=.6;t<L-.3;t+=1.2){const x=A2[0][0]+dx*t,z=A2[0][1]+dz*t;obox(m,x+nx*.28,z+nz*.28,nx,nz,.56,.09,1.2,y1-.2,mc);}}}};
   walls(outer,false);holes.forEach(r=>walls(r,true));
   if(y0>.3)fillPoly(acc('solid'),outer,holes,y0,C(0xb8bcbf),8,true);
-  if(key==='breguet')fillPoly(acc('green'),outer,holes,y1+.02,C(0x7fa35a),5);else fillPoly(acc('roof'),outer,holes,y1+.02,roofC,6);
+  if(key==='breguet')fillPoly(acc('green'),outer,holes,y1+.02,C(0x7fa35a),5);else if(key==='lumen')fillPoly(acc('solid'),outer,holes,y1+.02,C(0xeeeeea),6);else fillPoly(acc('roof'),outer,holes,y1+.02,roofC,6);
   const O=obb(outer);
   // toits techniques sur les grands bâtiments ordinaires
   if((key==='lab'||key==='off'||key==='res')&&big>600){const m=acc('solid');for(let k=0,n=Math.min(4,1+Math.floor(big/1500));k<n;k++){const u=RR(-.35,.35)*O.L,v=RR(-.3,.3)*O.W,x=O.cx+O.ux*u+O.vx*v,z=O.cz+O.uz*u+O.vz*v;if(!pip(x,z,outer))continue;obox(m,x,z,O.ux,O.uz,RR(2,4.5),RR(1.6,3),y1,y1+RR(1.2,2.4),C(0xa4a8ab));}}
+  if(key==='lumen'){// double peau de lames verticales blanches, bord supérieur en selle (relevé aux angles)
+    const m=acc('frame'),wc=C(0xf2f0ea),base=4.6,topAt=(x,z)=>{const dx=x-O.cx,dz=z-O.cz,u=(dx*O.ux+dz*O.uz)/(O.L/2),v=(dx*O.vx+dz*O.vz)/(O.W/2);return y1+.6+4.2*Math.min(1,Math.abs(u*v))*Math.min(1,Math.abs(u*v)+.2);};
+    const ccw=area2(outer)>0;let acc0=0;
+    for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.05)continue;const dx=(b[0]-a[0])/L,dz=(b[1]-a[1])/L;let nx=dz,nz=-dx;if(!ccw){nx=-nx;nz=-nz;}
+      let t=(.8-acc0%.8)%.8;for(;t<L;t+=.8){const x=a[0]+dx*t+nx*1.1,z=a[1]+dz*t+nz*1.1;obox(m,x,z,dx,dz,.12,.42,base,topAt(x,z),wc);}acc0+=L;
+      const xa=a[0]+nx*1.1,za=a[1]+nz*1.1,xb=b[0]+nx*1.1,zb=b[1]+nz*1.1;
+      for(let y=base+3.4;y<y1;y+=3.4)obox(m,(xa+xb)/2,(za+zb)/2,dx,dz,L+.1,.7,y,y+.28,wc);
+      const ta=topAt(xa,za),tb=topAt(xb,zb);beam(m,[xa,ta,za],[xb,tb,zb],.45,wc);beam(m,[xa,base,za],[xb,base,zb],.4,wc);}}
   if(key==='eiffel'){// toiture ETFE translucide débordante, posée sur une trame de poteaux
     const ty=y1+2.6,E=acc('etfe');fillPoly(E,outer,[],ty,WHITE,12);const m=acc('metal'),mc=C(0x9aa3a9);
     for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length];m.quad([a[0],ty-.45,a[1]],[b[0],ty-.45,b[1]],[b[0],ty+.15,b[1]],[a[0],ty+.15,a[1]],mc);m.quad([b[0],ty-.45,b[1]],[a[0],ty-.45,a[1]],[a[0],ty+.15,a[1]],[b[0],ty+.15,b[1]],mc);}
@@ -381,6 +394,23 @@ function building([h,mh,kind,p,hs,key]){
     const N=acc('net');for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);N.quad([a[0],y1+.8,a[1]],[b[0],y1+.8,b[1]],[b[0],y1+4.4,b[1]],[a[0],y1+4.4,a[1]],WHITE,[0,0,L/1.2,3]);}
     const m=acc('solid'),cc=C(0xc9c4b9);for(let i=0;i<outer.length;i++){const a=outer[i];obox(m,a[0],a[1],1,0,.5,.5,y1,y1+4.6,cc);}}
 }
+// Gare Université Paris-Saclay : halle à cheval sur le viaduc, toiture vitrée pliée en losanges, façades en triangles vitrés
+function stationHall(outer,h){const O=obb(outer),G=acc('groof'),F=acc('frame'),S=acc('solid'),wc=C(0xf4f4f1),cc=C(0xbdbab2),N=Math.max(4,Math.round(O.L/6.5)),HL=15.5,HH=20.5;
+  const P=(u,v,y)=>[O.cx+O.ux*u+O.vx*v,y,O.cz+O.uz*u+O.vz*v],U=i=>-O.L/2+i*O.L/N,Vj=[-O.W/2,0,O.W/2];
+  const Hy=(i,j)=>j===1?(i%2?HL+1:HH):(i%2?HH+.5:HL);
+  for(let i=0;i<N;i++)for(let j=0;j<2;j++){const a=P(U(i),Vj[j],Hy(i,j*2===2?2:j===0?0:1)),q=(ii,jj)=>P(U(ii),Vj[jj],Hy(ii,jj)),A=q(i,j),B=q(i+1,j),C2=q(i+1,j+1),D2=q(i,j+1);
+    G.tri(A,B,C2,WHITE,[0,0],[1.6,0],[1.6,1.6]);G.tri(A,C2,D2,WHITE,[0,0],[1.6,1.6],[0,1.6]);}
+  for(let i=0;i<=N;i++)for(let j=0;j<3;j++){const p=P(U(i),Vj[j],Hy(i,j));if(i<N)beam(F,p,P(U(i+1),Vj[j],Hy(i+1,j)),.35,wc);if(j<2)beam(F,p,P(U(i),Vj[j+1],Hy(i,j+1)),.35,wc);if(i<N&&j<2)beam(F,p,P(U(i+1),Vj[j+1],Hy(i+1,j+1)),.22,wc);}
+  // façades latérales : triangles vitrés en zigzag sur un socle béton
+  for(const j of[0,2]){for(let i=0;i<N;i++){const b0=P(U(i),Vj[j],4),b1=P(U(i+1),Vj[j],4),t0=P(U(i),Vj[j],Hy(i,j)),t1=P(U(i+1),Vj[j],Hy(i+1,j));
+      G.quad(b0,b1,t1,t0,WHITE,[0,0,1.4,2]);beam(F,t0,P(U(i),Vj[j],0),.4,wc);beam(F,i%2?b0:b1,i%2?t1:t0,.3,wc);
+      const g0=P(U(i),Vj[j],0),g1=P(U(i+1),Vj[j],0);S.quad(g0,g1,b1,b0,cc);S.quad(b0,b1,g1,g0,cc);addSeg(g0[0],g0[2],g1[0],g1[2]);}
+    beam(F,P(U(N),Vj[j],Hy(N,j)),P(U(N),Vj[j],0),.4,wc);}
+  // pignons vitrés
+  for(const i of[0,N]){const pts=[0,1,2].map(j=>P(U(i),Vj[j],Hy(i,j))),g=[0,2].map(j=>P(U(i),Vj[j],4));G.quad(g[0],g[1],pts[2],pts[0],WHITE,[0,0,2,2]);G.tri(pts[0],pts[2],pts[1],WHITE,[0,0],[2,0],[1,.5]);
+    const g0=P(U(i),Vj[0],0),g1=P(U(i),Vj[2],0);S.quad(g0,g1,g[1],g[0],cc);S.quad(g[0],g[1],g1,g0,cc);addSeg(g0[0],g0[2],g1[0],g1[2]);beam(F,g[0],g[1],.4,wc);}
+  // quai et marquise sous la halle, au niveau du viaduc
+  const qa=acc('solid'),Q=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([a,b])=>P(a*O.L/2*.96,b*O.W/2*.9,10.4));qa.quad(Q[3],Q[2],Q[1],Q[0],C(0xd8d5ce));qa.quad(Q[0],Q[1],Q[2],Q[3],C(0x9ea2a6));}
 function labelSprite(text,x,y,z){const c=document.createElement('canvas');c.width=512;c.height=112;const g=c.getContext('2d');g.font='700 52px Barlow, "Segoe UI", sans-serif';const tw=Math.min(500,g.measureText(text).width+48),x0=(512-tw)/2;
   g.fillStyle='rgba(18,22,26,.86)';g.beginPath();g.roundRect(x0,12,tw,88,44);g.fill();g.fillStyle='#e6bf4f';g.fillRect(x0+22,52,8,8);g.fillStyle='#f3efe4';g.textAlign='center';g.textBaseline='middle';g.fillText(text,256+8,58,tw-40);
   const s=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(c),depthWrite:false,fog:false}));s.scale.set(22,22*112/512,1);s.position.set(x,y,z);scene.add(s);}
