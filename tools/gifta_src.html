@@ -208,7 +208,7 @@ const FAC={
   eiffelTop:facade({bx:4,fy:2,bw:3,fh:16.3/2-3.5,phong:1,draw(g,o){for(let f=0;f<2;f++){const y=f*o.fh;const gr=g.createLinearGradient(0,y,0,y+o.fh);gr.addColorStop(0,'#f4f7f9');gr.addColorStop(1,'#d7e0e7');g.fillStyle=gr;g.fillRect(0,y,o.W,o.fh);
       g.fillStyle='rgba(120,140,160,.25)';for(let b=0;b<8;b++)g.fillRect(b*o.W/8,y,2,o.fh);const wy=y+o.fh*.38,wh=o.fh*.28;o.glass(0,wy,o.W,wh,'#8ea6b8','#3a4b5a');for(let b=0;b<4;b++)o.lit(b*o.bw+3,wy,o.bw-6,wh,.45);g.fillStyle='#596570';for(let b=0;b<=8;b++)g.fillRect(b*o.W/8-1,wy,3,wh);}}}),
   // Bouygues (Gigon/Guyer) : panneaux de céramique crème rainurés, grandes baies sombres
-  bouygues:facade({bx:4,fy:4,bw:2.2,fh:16.3/4,draw(g,o){for(let f=0;f<4;f++)for(let b=0;b<4;b++){const x=b*o.bw,y=f*o.fh;g.fillStyle=R()<.5?'#ece6d6':'#e3dcc8';g.fillRect(x,y,o.bw,o.fh);
+bouygues:facade({bx:4,fy:4,bw:2.2,fh:16.3/4,draw(g,o){for(let f=0;f<4;f++)for(let b=0;b<4;b++){const x=b*o.bw,y=f*o.fh;g.fillStyle=R()<.5?'#ece6d6':'#e3dcc8';g.fillRect(x,y,o.bw,o.fh);
       g.fillStyle='rgba(120,105,80,.12)';for(let xx=3;xx<o.bw;xx+=6)g.fillRect(x+xx,y,2,o.fh);g.fillStyle='rgba(0,0,0,.07)';g.fillRect(x,y+o.fh-3,o.bw,3);
       if(R()<.75){const wx=x+o.bw*.08,wy=y+o.fh*.12,w=o.bw*.84,h=o.fh*.74;g.fillStyle='#1f2429';g.fillRect(wx-3,wy-3,w+6,h+6);o.glass(wx,wy,w,h,'#6f8290','#1d262e');o.lit(wx,wy,w,h,.4);g.fillStyle='#1f2429';g.fillRect(wx+w*.5-2,wy,4,h);}}}}),
   // Bréguet réhabilité : bandeaux blancs horizontaux et fenêtres en bandeau continues
@@ -218,6 +218,8 @@ const FAC={
   ens:facade({bx:2,fy:2,bw:3.6,fh:3.6,draw(g,o){g.fillStyle='#ddd6c8';g.fillRect(0,0,o.W,o.H);for(let f=0;f<2;f++)for(let b=0;b<2;b++){const x=b*o.bw,y=f*o.fh;g.fillStyle=R()<.5?'rgba(255,255,255,.08)':'rgba(0,0,0,.04)';g.fillRect(x,y,o.bw,o.fh);g.fillStyle='rgba(90,80,60,.25)';g.fillRect(x,y,o.bw,3);g.fillRect(x,y,3,o.fh);
       if(R()<.35){const wx=x+o.bw*.42,wy=y+o.fh*.12,w=o.bw*.16,h=o.fh*.76;o.glass(wx,wy,w,h);o.lit(wx,wy,w,h,.5);}}}}),
   ensglass:facade({bx:8,fy:2,bw:1.8,fh:3.8,phong:1,draw(g,o){for(let f=0;f<2;f++){const y=f*o.fh;g.fillStyle='#545b62';g.fillRect(0,y,o.W,o.fh*.08);for(let b=0;b<8;b++){const x=b*o.bw;o.glass(x+1,y+o.fh*.08,o.bw-2,o.fh*.92,'#d2e2ea','#7591a3');o.lit(x+1,y+o.fh*.08,o.bw-2,o.fh*.92,.5);g.fillStyle='#4a5157';g.fillRect(x,y,3,o.fh);}}}}),
+  // Bouygues, aile noire : mur-rideau sombre à montants fins
+  bnoir:facade({bx:8,fy:4,bw:1.6,fh:17.5/4,phong:1,draw(g,o){g.fillStyle='#16191c';g.fillRect(0,0,o.W,o.H);for(let f=0;f<4;f++)for(let b=0;b<8;b++){const x=b*o.bw,y=f*o.fh;o.glass(x+3,y+3,o.bw-6,o.fh-6,'#3a4752','#0e1216');o.lit(x+3,y+3,o.bw-6,o.fh-6,.35);}g.fillStyle='#2b3035';for(let b=0;b<=8;b++)g.fillRect(b*o.bw-2,0,4,o.H);}}),
   // Lieu de vie (MUOTO) : ossature béton apparente et grands vitrages
   ldv:facade({bx:4,fy:4,bw:5,fh:3.55,draw(g,o){g.fillStyle='#cdc8bd';g.fillRect(0,0,o.W,o.H);for(let f=0;f<4;f++)for(let b=0;b<4;b++){const x=b*o.bw,y=f*o.fh;o.glass(x+o.bw*.08,y+o.fh*.12,o.bw*.84,o.fh*.76,'#b9cad3','#536674');o.lit(x+o.bw*.08,y+o.fh*.12,o.bw*.84,o.fh*.76,.5);}}}),
 };
@@ -287,6 +289,16 @@ function build(){
     if((c===0||c===1)&&w>=6){let acc0=0;for(let i=0;i<pts.length-1;i++){const [ax,az]=pts[i],[bx,bz]=pts[i+1],L=Math.hypot(bx-ax,bz-az);if(L<.1)continue;const dx=(bx-ax)/L,dz=(bz-az)/L,nx=-dz*.08,nz=dx*.08;
       for(let t=(9-acc0%9)%9;t<L-.1;t+=9){const t2=Math.min(L,t+3),x1=ax+dx*t,z1=az+dz*t,x2=ax+dx*t2,z2=az+dz*t2;mk.quad([x1-nx,y+.012,z1-nz],[x2-nx,y+.012,z2-nz],[x2+nx,y+.012,z2+nz],[x1+nx,y+.012,z1+nz],WH);}acc0+=L;}}}
   // bâtiments
+  {const BOU=D.B.find(b=>b[5]==='bouygues');if(BOU){BOU_P=pairs(BOU[3]);const bx=BOU_P.map(p=>p[0]),bz=BOU_P.map(p=>p[1]),X0=Math.min(...bx),X1=Math.max(...bx),Z0=Math.min(...bz),Z1=Math.max(...bz);
+    for(const B of D.B){if(B===BOU)continue;const p=pairs(B[3]),xs=p.map(q=>q[0]),zs=p.map(q=>q[1]);if(!(Math.max(...xs)>X0-6&&Math.min(...xs)<X1+6&&Math.max(...zs)>Z0-6&&Math.min(...zs)<Z1+6))continue;
+      if(B[2]===1)B[5]='bportique';else if(B[5]==='lab')B[5]='bnoir';}
+    // façade en retrait sous la dalle du portique (côtés exposés au parvis)
+    const PT=D.B.find(b=>b[5]==='bportique');if(PT){const q=pairs(PT[3]),qx=q.map(v=>v[0]),qz=q.map(v=>v[1]),A0=Math.min(...qx),A1=Math.max(...qx),C0=Math.min(...qz),C1=Math.max(...qz),RC=5.5;
+      const sx=(Math.abs(X0-A0)<Math.abs(X1-A1))?1:-1,sz=(Math.abs(Z0-C0)<Math.abs(Z1-C1))?1:-1,ex=sx>0?A0:A1,ix=sx>0?A1:A0,ez=sz>0?C0:C1,iz=sz>0?C1:C0;
+      for(let k=0;k<BOU[3].length;k+=2){const x=BOU[3][k],z=BOU[3][k+1];if(x<A0-.6||x>A1+.6||z<C0-.6||z>C1+.6)continue;
+        const nearEx=Math.abs(x-ex)<7,nearEz=Math.abs(z-ez)<7,onIx=Math.abs(x-ix)<.6,onIz=Math.abs(z-iz)<.6;
+        if(nearEz&&!(onIx&&Math.abs(z-ez)<.6))BOU[3][k+1]=ez+sz*RC;if(nearEx&&!(onIz&&Math.abs(x-ex)<.6))BOU[3][k]=ex+sx*RC;}
+      BOU_P=pairs(BOU[3]);}}}
   for(const B of D.B)building(B);
   // clôtures, murets, haies
   const fa=acc('solid');for(const [k,p] of D.W){const pts=pairs(p),hh=[1.8,1.5,1.4][k],th=[.06,.3,.8][k],cl=C([0x5d6268,0xbcb5a6,0x3f6e36][k]);
@@ -324,13 +336,15 @@ function build(){
   // repères (noms des bâtiments)
   for(const [n,x,z,h] of D.N)labelSprite(n,x,h+10,z);
 }
-const roofC=C(0x8d9196),parC=C(0xb9b6ae);
+const roofC=C(0x8d9196),parC=C(0xb9b6ae);let BOU_P=null;
 function building([h,mh,kind,p,hs,key]){
   const outer=pairs(p),holes=hs.map(pairs),y0=mh,y1=Math.max(h,mh+1),big=Math.abs(area2(outer));
+  if(key==='bportique'){portico(outer,y1);return;}
   if(kind===1){// auvent
     fillPoly(acc('solid'),outer,holes,y1,C(0xd8dbdd),8);fillPoly(acc('solid'),outer,holes,y1-.3,C(0xe6e8ea),8,true);return;}
   if(key==='gare'){stationHall(outer,h);return;}
   if(key==='breguet'){breguetMass(outer,holes);return;}
+  if(key==='bnoir')bannerWall(outer,y1);
   const sty=key==='lumen'?'ensglass':key in FAC?key:key==='ens_n'||key==='ens_s'?'ens':key==='lab'?(big>2500&&h>12?'off':'lab'):key;
   const walls=(ring,hole)=>{const ccw=area2(ring)>0,out=hole?!ccw:ccw;let run=0;
     for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.05)continue;
@@ -350,7 +364,7 @@ function building([h,mh,kind,p,hs,key]){
         m.quad([A2[0][0]+nx*1.4,6.4,A2[0][1]+nz*1.4],[A2[1][0]+nx*1.4,6.4,A2[1][1]+nz*1.4],[A2[1][0]+nx*1.4,7.2,A2[1][1]+nz*1.4],[A2[0][0]+nx*1.4,7.2,A2[0][1]+nz*1.4],C(0x262b31));
         m.quad([A2[0][0],6.4,A2[0][1]],[A2[1][0],6.4,A2[1][1]],[A2[1][0]+nx*1.4,6.4,A2[1][1]+nz*1.4],[A2[0][0]+nx*1.4,6.4,A2[0][1]+nz*1.4],C(0x1c2025));}
       if(key==='bouygues'&&!hole){const m=acc('metal'),wc=C(0xf1efe9),dx=(A2[1][0]-A2[0][0])/L,dz=(A2[1][1]-A2[0][1])/L;
-        for(let t=2.2;t<L-1;t+=4.4){const x=A2[0][0]+dx*t,z=A2[0][1]+dz*t;obox(m,x+nx*.32,z+nz*.32,dx,dz,.55,.64,0,y1-1.3,wc);}
+        for(let t=2.2;t<L-1;t+=4.4){const x=A2[0][0]+dx*t,z=A2[0][1]+dz*t;obox(m,x+nx*.09,z+nz*.09,dx,dz,.42,.18,0,y1-1.3,C(0xd8dcdf));}
         const o1=.9,P0=[A2[0][0]+nx*o1,A2[0][1]+nz*o1],P1=[A2[1][0]+nx*o1,A2[1][1]+nz*o1],ya=y1-1.4,yb=y1+.4;
         m.quad([P0[0],ya,P0[1]],[P1[0],ya,P1[1]],[P1[0],yb,P1[1]],[P0[0],yb,P0[1]],wc);m.quad([A2[0][0],ya,A2[0][1]],[A2[1][0],ya,A2[1][1]],[P1[0],ya,P1[1]],[P0[0],ya,P0[1]],C(0xd9d6cf));
         m.quad([P0[0],yb,P0[1]],[P1[0],yb,P1[1]],[A2[1][0],yb,A2[1][1]],[A2[0][0],yb,A2[0][1]],wc);}
@@ -374,11 +388,6 @@ function building([h,mh,kind,p,hs,key]){
     const ty=y1+2.6,E=acc('etfe');fillPoly(E,outer,[],ty,WHITE,12);const m=acc('metal'),mc=C(0x9aa3a9);
     for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length];m.quad([a[0],ty-.45,a[1]],[b[0],ty-.45,b[1]],[b[0],ty+.15,b[1]],[a[0],ty+.15,a[1]],mc);m.quad([b[0],ty-.45,b[1]],[a[0],ty-.45,a[1]],[a[0],ty+.15,a[1]],[b[0],ty+.15,b[1]],mc);}
     for(let u=-O.L/2+6;u<O.L/2;u+=14)for(let v=-O.W/2+6;v<O.W/2;v+=14){const x=O.cx+O.ux*u+O.vx*v,z=O.cz+O.uz*u+O.vz*v;if(pip(x,z,outer))obox(m,x,z,O.ux,O.uz,.35,.35,y1,ty,mc);}}
-  if(key==='bouygues'){// angles en retrait marqués par de hautes colonnes
-    const m=acc('metal'),wc=C(0xeceae4);for(const [s,t] of[[-1,-1],[1,-1],[1,1],[-1,1]]){const cxp=O.cx+O.ux*O.L/2*s*.97+O.vx*O.W/2*t*.95,czp=O.cz+O.uz*O.L/2*s*.97+O.vz*O.W/2*t*.95;if(pip(cxp,czp,outer))continue;
-      const PO=[];for(const [du,dv] of[[0,0],[-s*5,0],[-s*10,0],[-s*15,0],[-s*20,0],[-s*25,0],[0,-t*5],[0,-t*10],[0,-t*15],[0,-t*20]]){const x=cxp+O.ux*du+O.vx*dv,z=cxp===cxp?czp+O.uz*du+O.vz*dv:0;if(pip(x,z,outer))continue;obox(m,x,z,O.ux,O.uz,1.05,1.05,0,y1-1.4,wc);addCirc(x,z,.6);PO.push([x,z]);}
-      // dalle de couronnement du portique (relie les colonnes à la façade)
-      const cx2=cxp-O.ux*s*12.5-O.vx*t*10+O.ux*s*.6+O.vx*t*.6,cz2=czp-O.uz*s*12.5-O.vz*t*10+O.uz*s*.6+O.vz*t*.6;if(PO.length)obox(m,cx2,cz2,O.ux,O.uz,26.2,21.2,y1-1.4,y1+.4,wc);}}
   if(key==='breguet'){holes.forEach(hh=>fillPoly(acc('groof'),hh,[],y1+.4,WHITE,6));
     // verrières en sheds sur les toits (comme sur la vue aérienne)
     const S=acc('groof');for(let k=0;k<7;k++){const u=RR(-.38,.38)*O.L,v=RR(-.32,.32)*O.W,x=O.cx+O.ux*u+O.vx*v,z=O.cz+O.uz*u+O.vz*v;if(!pip(x,z,outer))continue;
@@ -433,6 +442,18 @@ function stationHall(outer,h){const O=obb(outer),G=acc('groof'),F=acc('frame'),S
     const g0=P(U(i),Vj[0],0),g1=P(U(i),Vj[2],0);S.quad(g0,g1,g[1],g[0],cc);S.quad(g[0],g[1],g1,g0,cc);addSeg(g0[0],g0[2],g1[0],g1[2]);beam(F,g[0],g[1],.4,wc);}
   // quai et marquise sous la halle, au niveau du viaduc
   const qa=acc('solid'),Q=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([a,b])=>P(a*O.L/2*.96,b*O.W/2*.9,10.4));qa.quad(Q[3],Q[2],Q[1],Q[0],C(0xd8d5ce));qa.quad(Q[0],Q[1],Q[2],Q[3],C(0x9ea2a6));}
+function bannerWall(outer,y1){const ccw=area2(outer)>0;let best=null;for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);let nz=-(b[0]-a[0])/L;if(!ccw)nz=-nz;if(nz<-.5&&(!best||L>best.L))best={a,b,L};}
+  if(!best||best.L<14)return;const {a,b,L}=best,dx=(b[0]-a[0])/L,dz=(b[1]-a[1])/L;let nx=dz,nz=-dx;if(!ccw){nx=-nx;nz=-nz;}
+  const N=[['GUSTAVE EIFFEL','1832 – 1923'],['LOUIS C. BREGUET','1804 – 1883'],['FRANCIS BOUYGUES','1922 – 1993']],n=Math.min(3,Math.floor(L/9));
+  for(let k=0;k<n;k++){const c=document.createElement('canvas');c.width=256;c.height=384;const g=c.getContext('2d');g.fillStyle='#3d5c86';g.fillRect(0,0,256,384);const gr=g.createLinearGradient(0,0,0,384);gr.addColorStop(0,'rgba(255,255,255,.18)');gr.addColorStop(1,'rgba(0,0,0,.25)');g.fillStyle=gr;g.fillRect(0,0,256,384);
+    g.strokeStyle='rgba(255,255,255,.35)';g.lineWidth=3;for(let y=40;y<230;y+=22){g.beginPath();g.moveTo(40,y);g.lineTo(216,y+12);g.stroke();}g.fillStyle='#fff';g.font='800 30px Barlow,sans-serif';g.textAlign='center';g.fillText(N[k][0],128,290,236);g.font='600 22px Barlow,sans-serif';g.fillText(N[k][1],128,326);
+    const m=new T.MeshLambertMaterial({map:new T.CanvasTexture(c),emissive:0xffffff,emissiveIntensity:0});NIGHT.push([m,.6]);const p=new T.Mesh(new T.PlaneGeometry(5,7.5),m),t=(k+1)/(n+1);
+    p.position.set(a[0]+dx*L*t+nx*.08,y1*.55,a[1]+dz*L*t+nz*.08);p.rotation.y=Math.atan2(nx,nz);scene.add(p);}}
+function portico(outer,y1){const S=acc('frame'),cc=C(0xeef0f1),under=C(0xdfe2e4),yb=y1-1.3,yt=y1+.45;fillPoly(S,outer,[],yt,cc,6);fillPoly(S,outer,[],yb,under,6,true);
+  for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length];S.quad([a[0],yb,a[1]],[b[0],yb,b[1]],[b[0],yt,b[1]],[a[0],yt,a[1]],cc);S.quad([b[0],yb,b[1]],[a[0],yb,a[1]],[a[0],yt,a[1]],[b[0],yt,b[1]],cc);}
+  const ccw=area2(outer)>0,m=acc('metal'),colc=C(0xe6e9ec),inB=(x,z)=>BOU_P&&(pip(x,z,BOU_P)||BOU_P.some((p,k)=>segDist(x,z,p,BOU_P[(k+1)%BOU_P.length])<1.4));
+  for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<3)continue;const dx=(b[0]-a[0])/L,dz=(b[1]-a[1])/L;let nx=-dz,nz=dx;if(!ccw){nx=-nx;nz=-nz;}
+    const n=Math.max(1,Math.round(L/5.6));for(let k=0;k<=n;k++){const t=k/n,x=a[0]+dx*L*t+nx*.7,z=a[1]+dz*L*t+nz*.7;if(inB(x,z))continue;obox(m,x,z,dx,dz,1.15,1.15,0,yb,colc);addCirc(x,z,.65);}}}
 function labelSprite(text,x,y,z){const c=document.createElement('canvas');c.width=512;c.height=112;const g=c.getContext('2d');g.font='700 52px Barlow, "Segoe UI", sans-serif';const tw=Math.min(500,g.measureText(text).width+48),x0=(512-tw)/2;
   g.fillStyle='rgba(18,22,26,.86)';g.beginPath();g.roundRect(x0,12,tw,88,44);g.fill();g.fillStyle='#e6bf4f';g.fillRect(x0+22,52,8,8);g.fillStyle='#f3efe4';g.textAlign='center';g.textBaseline='middle';g.fillText(text,256+8,58,tw-40);
   const s=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(c),depthWrite:false,fog:false}));s.scale.set(22,22*112/512,1);s.position.set(x,y,z);scene.add(s);}
