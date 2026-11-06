@@ -330,6 +330,7 @@ function building([h,mh,kind,p,hs,key]){
   if(kind===1){// auvent
     fillPoly(acc('solid'),outer,holes,y1,C(0xd8dbdd),8);fillPoly(acc('solid'),outer,holes,y1-.3,C(0xe6e8ea),8,true);return;}
   if(key==='gare'){stationHall(outer,h);return;}
+  if(key==='breguet'){breguetMass(outer,holes);return;}
   const sty=key==='lumen'?'ensglass':key in FAC?key:key==='ens_n'||key==='ens_s'?'ens':key==='lab'?(big>2500&&h>12?'off':'lab'):key;
   const walls=(ring,hole)=>{const ccw=area2(ring)>0,out=hole?!ccw:ccw;let run=0;
     for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.05)continue;
@@ -394,6 +395,27 @@ function building([h,mh,kind,p,hs,key]){
     const N=acc('net');for(let i=0;i<outer.length;i++){const a=outer[i],b=outer[(i+1)%outer.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);N.quad([a[0],y1+.8,a[1]],[b[0],y1+.8,b[1]],[b[0],y1+4.4,b[1]],[a[0],y1+4.4,a[1]],WHITE,[0,0,L/1.2,3]);}
     const m=acc('solid'),cc=C(0xc9c4b9);for(let i=0;i<outer.length;i++){const a=outer[i];obox(m,a[0],a[1],1,0,.5,.5,y1,y1+4.6,cc);}}
 }
+// Bréguet : volumes en gradins (ailes basses à toit vert en périphérie, blocs de 4 puis 6 niveaux au centre)
+function clipRect(poly,x0,x1,z0,z1){let P=poly;for(const [ax,v,sg] of[[0,x0,1],[0,x1,-1],[1,z0,1],[1,z1,-1]]){const o=[];for(let i=0;i<P.length;i++){const a=P[(i+P.length-1)%P.length],b=P[i],ia=(a[ax]-v)*sg>=0,ib=(b[ax]-v)*sg>=0;
+    if(ib!==ia){const t=(v-a[ax])/((b[ax]-a[ax])||1e-9);o.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]);}if(ib)o.push(b);}P=o;if(!P.length)break;}return P;}
+function segDist(x,z,a,b){const ex=b[0]-a[0],ez=b[1]-a[1],L2=ex*ex+ez*ez||1e-9;let t=((x-a[0])*ex+(z-a[1])*ez)/L2;t=t<0?0:t>1?1:t;return Math.hypot(x-a[0]-ex*t,z-a[1]-ez*t);}
+function breguetMass(outer,holes){const CS=8,xs=outer.map(p=>p[0]),zs=outer.map(p=>p[1]),X0=Math.min(...xs),Z0=Math.min(...zs),NI=Math.ceil((Math.max(...xs)-X0)/CS),NJ=Math.ceil((Math.max(...zs)-Z0)/CS);
+  const rings=[outer,...holes],LV=[7.4,14.3,21.2],cells=new Map(),key2=(i,j)=>i*1000+j;
+  for(let i=0;i<NI;i++)for(let j=0;j<NJ;j++){const x0=X0+i*CS,z0=Z0+j*CS,poly=clipRect(outer,x0,x0+CS,z0,z0+CS);if(poly.length<3||Math.abs(area2(poly))<2)continue;
+    let cx=0,cz=0;poly.forEach(p=>{cx+=p[0];cz+=p[1];});cx/=poly.length;cz/=poly.length;if(holes.some(hh=>pip(cx,cz,hh)))continue;
+    let d=1e9;for(const r of rings)for(let k=0;k<r.length;k++)d=Math.min(d,segDist(cx,cz,r[k],r[(k+1)%r.length]));
+    const lvl=d<4.5?0:d<11?1:2;cells.set(key2(i,j),{i,j,x0,z0,poly,h:LV[lvl],lvl});}
+  const H=(i,j)=>{const c=cells.get(key2(i,j));return c?c.h:0;},F=FAC.breguet,pa=acc('solid'),wc=C(0xf6f6f3),on=(a,b,v,ax)=>Math.abs(a[ax]-v)<1e-6&&Math.abs(b[ax]-v)<1e-6;
+  for(const c of cells.values()){const {poly,h,i,j,x0,z0}=c,ccw=area2(poly)>0;
+    for(let k=0;k<poly.length;k++){const a=poly[k],b=poly[(k+1)%poly.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.05)continue;
+      let hn=0,inner=false;if(on(a,b,x0,0)){hn=H(i-1,j);inner=true;}else if(on(a,b,x0+CS,0)){hn=H(i+1,j);inner=true;}else if(on(a,b,z0,1)){hn=H(i,j-1);inner=true;}else if(on(a,b,z0+CS,1)){hn=H(i,j+1);inner=true;}
+      if(h<=hn+.01)continue;const y0=inner?hn:0,A2=ccw?[b,a]:[a,b],dx=(A2[1][0]-A2[0][0])/L,dz=(A2[1][1]-A2[0][1])/L,u0=(A2[0][0]*dx+A2[0][1]*dz)/F.tw;
+      acc('f_breguet').quad([A2[0][0],y0,A2[0][1]],[A2[1][0],y0,A2[1][1]],[A2[1][0],h,A2[1][1]],[A2[0][0],h,A2[0][1]],WHITE,[u0,y0/F.th,u0+L/F.tw,h/F.th]);
+      pa.quad([A2[0][0],h,A2[0][1]],[A2[1][0],h,A2[1][1]],[A2[1][0],h+.55,A2[1][1]],[A2[0][0],h+.55,A2[0][1]],wc);pa.quad([A2[1][0],h,A2[1][1]],[A2[0][0],h,A2[0][1]],[A2[0][0],h+.55,A2[0][1]],[A2[1][0],h+.55,A2[1][1]],wc);
+      if(!inner)addSeg(a[0],a[1],b[0],b[1]);}
+    fillPoly(c.lvl===2?acc('solid'):acc('green'),poly,[],h+.02,c.lvl===2?C(0xd9dcdc):C(0x7fa35a),5);
+    if(c.lvl===2&&R()<.35){let cx=0,cz=0;poly.forEach(p=>{cx+=p[0];cz+=p[1];});cx/=poly.length;cz/=poly.length;obox(acc('solid'),cx,cz,1,0,4.4,3,h,h+.35,C(0x2c3e5c));}}
+  holes.forEach(hh=>fillPoly(acc('groof'),hh,[],LV[1]+.4,WHITE,6));}
 // Gare Université Paris-Saclay : halle à cheval sur le viaduc, toiture vitrée pliée en losanges, façades en triangles vitrés
 function stationHall(outer,h){const O=obb(outer),G=acc('groof'),F=acc('frame'),S=acc('solid'),wc=C(0xf4f4f1),cc=C(0xbdbab2),N=Math.max(4,Math.round(O.L/6.5)),HL=15.5,HH=20.5;
   const P=(u,v,y)=>[O.cx+O.ux*u+O.vx*v,y,O.cz+O.uz*u+O.vz*v],U=i=>-O.L/2+i*O.L/N,Vj=[-O.W/2,0,O.W/2];
