@@ -1,2 +1,3 @@
 # Sale-ready PDF and buyer copies: never commit (repo may be public)
 formation/contenu/2th-h4sh-protocol*.pdf
+__pycache__/
