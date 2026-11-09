@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2Th &amp; H4SH — Protocole 90 jours</title>
+<meta name="description" content="Le looksmaxing sans le bullshit : 10 modules, chaque conseil classé selon son niveau de preuve. Peau, physique, style, présence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1EEE8; --paper-2:#E7E2D8; --ink:#17171A; --ink-2:#3A3936; --muted:#6F6A61;
+  --line:#CDC6B9; --bord:#7A1F2E; --bord-2:#9A2A3C; --char:#1C1C1F; --char-2:#2A2A2E;
+  --serif:"Instrument Serif", Georgia, serif;
+  --sans:"Inter Tight", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+  --gut:24px; --max:1240px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.35;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.4 0 0 0 0 0.37 0 0 0 0 0.33 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.serif{font-family:var(--serif);font-weight:400}
+em,.it{font-family:var(--serif);font-style:italic;font-weight:400}
+:focus-visible{outline:2px solid var(--bord);outline-offset:3px}
+
+/* ---------- topbar ---------- */
+.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;height:60px}
+.logo{font-family:var(--mono);font-weight:500;font-size:15px;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
+.logo b{color:var(--bord);font-weight:500}
+.where{flex:1;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.where span{color:var(--ink)}
+.nav{display:flex;gap:20px}
+.nav a{text-decoration:none;font-size:14px;color:var(--ink-2)}
+.nav a:hover{color:var(--bord)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:600;font-size:15px;border:1px solid var(--ink);transition:background .2s,color .2s,transform .2s}
+.btn:hover{background:var(--bord);border-color:var(--bord)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.sm{padding:9px 14px;font-size:14px}
+.btn .arr{font-family:var(--mono);transition:transform .2s}
+.btn:hover .arr{transform:translateX(3px)}
+
+/* ---------- hero ---------- */
+.hero{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.kicker{display:flex;gap:14px;align-items:center;color:var(--muted);margin-bottom:28px}
+.kicker .stamp{border:1px solid var(--bord);color:var(--bord);padding:4px 8px;transform:rotate(-2deg)}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(52px,7.4vw,108px);line-height:.92;letter-spacing:-.02em}
+h1 em{color:var(--bord)}
+.lede{margin-top:28px;max-width:34em;font-size:19px;color:var(--ink-2)}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.facts{display:flex;flex-wrap:wrap;gap:0;margin-top:44px;border-top:1px solid var(--line)}
+.facts div{padding:14px 22px 0 0;margin-right:22px;border-right:1px solid var(--line)}
+.facts div:last-child{border:0}
+.facts b{display:block;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1}
+.facts span{color:var(--muted)}
+
+.fig{position:relative}
+.fig-head{display:flex;justify-content:space-between;color:var(--muted);border-bottom:1px solid var(--ink);padding-bottom:8px;margin-bottom:10px}
+.face{position:relative;aspect-ratio:400/520;width:100%;max-width:460px;margin:0 auto}
+.face svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.face .d{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s cubic-bezier(.6,0,.2,1)}
+.face .g{stroke:var(--muted);stroke-width:.8;stroke-dasharray:3 4}
+.face .m{stroke:var(--bord);stroke-width:1}
+.face .gl{opacity:0;transition:opacity .8s 1.2s}
+.face text{font-family:var(--mono);font-size:9.5px;fill:var(--muted);letter-spacing:.04em}
+.face.on .d{stroke-dashoffset:0}
+.face.on .gl{opacity:1}
+.hot{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:var(--paper);border:1px solid var(--bord);color:var(--bord);font:500 11px/28px var(--mono);text-align:center;opacity:0;transform:scale(.6);transition:opacity .4s,transform .4s,background .2s,color .2s}
+.face.on .hot{opacity:1;transform:none}
+.hot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--bord);opacity:0;animation:ping 2.6s infinite}
+.hot:hover,.hot.act{background:var(--bord);color:var(--paper)}
+@keyframes ping{0%{opacity:.6;transform:scale(.8)}80%,100%{opacity:0;transform:scale(1.5)}}
+.legend{list-style:none;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.legend li{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line);font-size:14px;color:var(--ink-2);transition:color .2s}
+.legend li .mono{color:var(--bord)}
+.legend li.act{color:var(--ink)}
+.legend li.act .mono{text-decoration:underline}
+
+/* ---------- strip ---------- */
+.strip{background:var(--char);color:var(--paper)}
+.strip .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px 28px;padding-top:16px;padding-bottom:16px}
+.strip span::before{content:"— ";color:var(--bord-2)}
+
+/* ---------- sections ---------- */
+section.s{padding:104px 0;border-bottom:1px solid var(--line)}
+.sh{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-bottom:56px}
+.sh .mono{color:var(--muted);padding-top:14px;border-top:1px solid var(--ink)}
+.sh .mono b{color:var(--bord);font-weight:500}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5vw,68px);line-height:1;letter-spacing:-.015em;padding-top:4px}
+h2 em{color:var(--bord)}
+.sh p{margin-top:18px;max-width:38em;color:var(--ink-2);font-size:18px}
+
+/* constat */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink)}
+.cols article{padding:28px 28px 8px 0}
+.cols article+article{padding-left:28px;border-left:1px solid var(--line)}
+.cols .n{font-family:var(--serif);font-size:56px;line-height:1;color:var(--bord)}
+.cols h3{font-size:20px;font-weight:600;margin:14px 0 10px;letter-spacing:-.01em}
+.cols p{color:var(--ink-2)}
+.quote{margin-top:64px;display:grid;grid-template-columns:200px 1fr;gap:24px}
+.quote blockquote{font-family:var(--serif);font-size:clamp(28px,3.4vw,44px);line-height:1.1}
+.quote blockquote s{color:var(--muted);text-decoration-color:var(--bord);text-decoration-thickness:2px}
+
+/* preuve */
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--ink);margin-bottom:40px}
+.lvl{padding:22px;text-align:left;transition:background .2s}
+.lvl+.lvl{border-left:1px solid var(--ink)}
+.lvl:hover{background:var(--paper-2)}
+.lvl[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.lvl[aria-pressed=true] .lvl-d{color:#BDB6AA}
+.lvl[aria-pressed=true] .mk.c{background:var(--paper);border-color:var(--paper)}
+.lvl[aria-pressed=true] .mk.p{border-color:var(--paper);background:linear-gradient(90deg,var(--paper) 50%,transparent 50%)}
+.lvl-t{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px}
+.lvl-d{margin-top:8px;font-size:15px;color:var(--ink-2)}
+.lvl .cnt{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:400;opacity:.7}
+.mk{display:inline-block;width:12px;height:12px;flex:none;border:1.5px solid var(--ink)}
+.mk.c{background:var(--ink)}
+.mk.p{background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
+.mk.w{border:0;width:14px;height:12px;background:var(--bord);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.filter-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;color:var(--muted)}
+.filter-info button{text-decoration:underline;color:var(--ink)}
+.claims{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.claim{background:var(--paper);border:1px solid var(--line);padding:22px 22px 18px;display:flex;flex-direction:column;gap:12px;transition:opacity .3s,transform .3s,border-color .2s}
+.claim:hover{border-color:var(--ink)}
+.claim.hide{display:none}
+.claim .myth{font-family:var(--serif);font-size:25px;line-height:1.12}
+.claim .myth::before{content:"« "} .claim .myth::after{content:" »"}
+.claim .rea{color:var(--ink-2);font-size:15.5px}
+.claim .meta{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:auto;padding-top:12px;border-top:1px dashed var(--line);color:var(--muted)}
+.claim .meta .tag{display:flex;gap:8px;align-items:center;color:var(--ink)}
+.claim .meta .med{color:var(--bord);border:1px solid var(--bord);padding:2px 6px}
+.claim .meta a{margin-left:auto;text-decoration:none;color:var(--ink)}
+.claim .meta a:hover{color:var(--bord)}
+.claim.w{border-left:3px solid var(--bord)}
+
+/* modules */
+.mods{border-top:1px solid var(--ink)}
+.mod{border-bottom:1px solid var(--line)}
+.mod>h3>button{width:100%;display:grid;grid-template-columns:72px 1fr auto 28px;align-items:center;gap:16px;padding:22px 0;text-align:left}
+.mod .num{font-family:var(--mono);color:var(--muted);font-size:13px}
+.mod .ttl{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.6vw,34px);line-height:1.05;transition:color .2s,transform .3s}
+.mod .tg{color:var(--muted)}
+.mod .pm{position:relative;width:16px;height:16px;justify-self:end}
+.mod .pm::before,.mod .pm::after{content:"";position:absolute;left:0;top:7px;width:16px;height:1.5px;background:var(--ink);transition:transform .3s}
+.mod .pm::after{transform:rotate(90deg)}
+.mod>h3>button:hover .ttl{color:var(--bord);transform:translateX(6px)}
+.mod.open .pm::after{transform:rotate(0)}
+.mod.open .ttl{color:var(--bord)}
+.mod .body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.6,0,.2,1)}
+.mod.open .body{grid-template-rows:1fr}
+.mod .body>div{overflow:hidden}
+.mod .inner{display:grid;grid-template-columns:72px 1fr 1fr;gap:16px;padding:0 0 28px}
+.mod .inner p{color:var(--ink-2);grid-column:2}
+.mod .inner ul{grid-column:3;list-style:none}
+.mod .inner li{padding:7px 0 7px 22px;border-top:1px solid var(--line);position:relative;font-size:15.5px}
+.mod .inner li::before{content:"→";position:absolute;left:0;font-family:var(--mono);font-size:13px;color:var(--bord)}
+.mod.pre .ttl{font-style:italic}
+.mod.danger .num{color:var(--bord)}
+.mod.flash{animation:flash 1.4s}
+@keyframes flash{0%,100%{background:transparent}20%{background:var(--paper-2)}}
+
+/* diagnostic */
+.diag{display:grid;grid-template-columns:1fr 1.3fr;gap:56px;align-items:start}
+.diag-side{position:sticky;top:100px}
+.prog{display:flex;gap:6px;margin-top:28px}
+.prog i{flex:1;height:3px;background:var(--line);transition:background .3s}
+.prog i.on{background:var(--bord)}
+.diag-side .mono{color:var(--muted);margin-top:12px}
+.card{border:1px solid var(--ink);background:var(--paper);min-height:420px;display:flex;flex-direction:column}
+.card-h{display:flex;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--ink);color:var(--muted)}
+.card-b{padding:28px 20px 24px;flex:1;display:flex;flex-direction:column}
+.q{font-family:var(--serif);font-size:clamp(28px,3vw,38px);line-height:1.05;margin-bottom:24px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:14px;align-items:center;text-align:left;padding:15px 16px;border:1px solid var(--line);transition:border-color .15s,background .15s}
+.opt .k{font-family:var(--mono);font-size:12px;color:var(--muted);width:22px;height:22px;border:1px solid var(--line);display:grid;place-items:center;flex:none}
+.opt:hover{border-color:var(--ink)}
+.opt:hover .k{border-color:var(--ink);color:var(--ink)}
+.card-f{display:flex;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--line)}
+.card-f button{color:var(--muted)} .card-f button:hover{color:var(--ink)}
+.card-f button[disabled]{visibility:hidden}
+.res ol{list-style:none;counter-reset:r;margin:6px 0 20px}
+.res li{counter-increment:r;display:grid;grid-template-columns:44px 1fr;gap:8px;padding:14px 0;border-top:1px solid var(--line)}
+.res li::before{content:counter(r,decimal-leading-zero);font-family:var(--mono);font-size:13px;color:var(--bord);padding-top:4px}
+.res li b{font-family:var(--serif);font-weight:400;font-size:24px;display:block;line-height:1.1}
+.res li span{color:var(--ink-2);font-size:15px}
+.alert{border-left:3px solid var(--bord);background:var(--paper-2);padding:12px 14px;font-size:15px;margin-bottom:18px}
+.fade{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* plan 90 */
+.plan{border:1px solid var(--ink)}
+.plan-top{display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:end;padding:28px;border-bottom:1px solid var(--ink)}
+.day{font-family:var(--serif);font-size:clamp(80px,11vw,150px);line-height:.8;letter-spacing:-.03em;min-width:3.2ch}
+.day small{font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:12px}
+.track{position:relative;padding-bottom:6px}
+.phases{display:grid;grid-template-columns:14fr 16fr 30fr 30fr;margin-bottom:14px}
+.phases span{border-left:1px solid var(--line);padding-left:8px;color:var(--muted);transition:color .2s}
+.phases span.on{color:var(--bord);border-color:var(--bord)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;cursor:ew-resize}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,var(--bord) var(--p,0%),var(--line) var(--p,0%))}
+input[type=range]::-moz-range-track{height:2px;background:var(--line)}
+input[type=range]::-moz-range-progress{height:2px;background:var(--bord)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-10px;background:var(--paper);border:2px solid var(--bord);border-radius:0;transform:rotate(45deg)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;background:var(--paper);border:2px solid var(--bord);border-radius:0;transform:rotate(45deg)}
+.ticks{display:flex;justify-content:space-between;color:var(--muted)}
+.plan-b{display:grid;grid-template-columns:repeat(3,1fr)}
+.plan-b>div{padding:24px 28px;min-height:190px}
+.plan-b>div+div{border-left:1px solid var(--line)}
+.plan-b h4{font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.plan-b ul{list-style:none}
+.plan-b li{padding:6px 0;border-top:1px solid var(--line);font-size:15.5px}
+.plan-b .ph{font-family:var(--serif);font-size:30px;line-height:1.05}
+.plan-b .ph+p{color:var(--ink-2);margin-top:10px;font-size:15.5px}
+.checkpt{color:var(--bord)}
+
+/* offres */
+.dark{background:var(--char);color:var(--paper);border-bottom:0}
+.dark .sh .mono{color:#9A948A;border-color:var(--paper)}
+.dark .sh p{color:#C9C2B6}
+.dark h2 em{color:#C9566A}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #4A4A50}
+.tier{padding:30px 26px;display:flex;flex-direction:column;position:relative}
+.tier+.tier{border-left:1px solid #4A4A50}
+.tier.rec{background:var(--paper);color:var(--ink);outline:1px solid var(--paper);transform:translateY(-14px);box-shadow:0 14px 0 0 var(--bord)}
+.tier .badge{position:absolute;top:-1px;right:-1px;background:var(--bord);color:var(--paper);padding:5px 10px}
+.tier .nm{color:#9A948A}
+.tier.rec .nm{color:var(--muted)}
+.price{font-family:var(--serif);font-size:84px;line-height:.9;margin:18px 0 4px;letter-spacing:-.02em}
+.price sup{font-size:.4em;vertical-align:.95em;margin-left:4px}
+.tier .sub{font-size:14px;color:#9A948A;min-height:21px}
+.tier.rec .sub{color:var(--muted)}
+.tier ul{list-style:none;margin:24px 0 28px;flex:1}
+.tier li{padding:9px 0 9px 24px;border-top:1px solid #3A3A40;position:relative;font-size:15.5px}
+.tier.rec li{border-color:var(--line)}
+.tier li::before{content:"";position:absolute;left:2px;top:16px;width:9px;height:9px;background:currentColor}
+.tier li.plus::before{background:var(--bord-2)}
+.tier .btn{justify-content:center;background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.tier .btn:hover{background:var(--bord);color:var(--paper);border-color:var(--bord)}
+.tier.rec .btn{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tier.rec .btn:hover{background:var(--bord);border-color:var(--bord)}
+.honest{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;padding-top:24px;border-top:1px solid #4A4A50;color:#C9C2B6;font-size:15px}
+.honest b{display:block;color:var(--paper);font-weight:600;margin-bottom:4px}
+
+/* faq */
+.faq{display:grid;grid-template-columns:200px 1fr;gap:24px}
+.faq details{border-top:1px solid var(--line)}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;padding:20px 0;font-size:19px;font-weight:500}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);color:var(--bord);transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 22px;max-width:44em;color:var(--ink-2)}
+
+/* final */
+.final{padding:120px 0 96px;text-align:left}
+.final h2{font-size:clamp(56px,9vw,140px);line-height:.88}
+.final-g{display:grid;grid-template-columns:1.2fr 1fr;gap:56px;align-items:end;margin-top:40px}
+.final p{font-size:19px;color:var(--ink-2);max-width:30em}
+form.wl{display:flex;border:1px solid var(--ink)}
+form.wl input{flex:1;min-width:0;border:0;background:transparent;padding:16px;font:inherit;color:var(--ink)}
+form.wl input:focus{outline:none}
+form.wl:focus-within{outline:2px solid var(--bord);outline-offset:3px}
+form.wl .btn{border:0}
+.wl-msg{margin-top:12px;min-height:24px;font-size:15px}
+.wl-msg.ok{color:var(--ink)}
+.wl-msg.ok::before{content:"✓ ";color:var(--bord);font-weight:700}
+.wl-note{margin-top:6px;color:var(--muted)}
+
+footer{background:var(--char);color:#9A948A;padding:48px 0 36px;font-size:14px}
+footer .wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+footer .big{font-family:var(--serif);font-style:italic;color:var(--paper);font-size:44px;line-height:1}
+footer .links{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:20px}
+footer a{color:#C9C2B6;text-decoration:none} footer a:hover{color:var(--paper)}
+footer .legal{grid-column:1/-1;padding-top:24px;border-top:1px solid #3A3A40;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s cubic-bezier(.2,.6,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .nav{display:none}
+  .hero .wrap{grid-template-columns:1fr;gap:40px}
+  .sh,.quote,.faq{grid-template-columns:1fr;gap:14px}
+  .sh .mono{padding-top:10px}
+  .diag{grid-template-columns:1fr;gap:32px}
+  .diag-side{position:static}
+  .tiers{grid-template-columns:1fr}
+  .tier+.tier{border-left:0;border-top:1px solid #4A4A50}
+  .tier.rec{transform:none;box-shadow:inset 0 -6px 0 var(--bord)}
+  .final-g{grid-template-columns:1fr;gap:28px}
+}
+@media (max-width:760px){
+  :root{--gut:16px}
+  body{font-size:16px}
+  .where{display:none}
+  .top .wrap{justify-content:space-between}
+  section.s{padding:72px 0}
+  .sh{margin-bottom:36px}
+  .cols,.levels,.claims,.plan-b,.honest{grid-template-columns:1fr}
+  .cols article+article{padding-left:0;border-left:0;border-top:1px solid var(--line)}
+  .lvl+.lvl{border-left:0;border-top:1px solid var(--ink)}
+  .plan-b>div+div{border-left:0;border-top:1px solid var(--line)}
+  .plan-b>div{min-height:0;padding:20px}
+  .plan-top{grid-template-columns:1fr;padding:20px;gap:16px}
+  .phases span{font-size:10px;letter-spacing:0}
+  .mod>h3>button{grid-template-columns:44px 1fr 20px;gap:10px}
+  .mod .tg{display:none}
+  .mod .inner{grid-template-columns:1fr;padding-left:54px}
+  .mod .inner p,.mod .inner ul{grid-column:1}
+  .legend{grid-template-columns:1fr}
+  .facts div{padding-right:14px;margin-right:14px}
+  .facts b{font-size:28px}
+  .claim .myth{font-size:22px}
+  form.wl{flex-direction:column}
+  form.wl .btn{justify-content:center}
+  footer .wrap{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top">2TH <b>&amp;</b> H4SH</a>
+    <div class="where mono" aria-hidden="true">Dossier n° 001 / <span id="where">Couverture</span></div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#preuve">Méthode</a><a href="#programme">Programme</a><a href="#diagnostic">Diagnostic</a><a href="#offres">Offres</a><a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn sm" href="#offres">Dès 27 € <span class="arr">→</span></a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero" data-where="Couverture">
+  <div class="wrap">
+    <div>
+      <div class="kicker mono"><span class="stamp">Prix de lancement</span><span>Protocole · 90 jours · 10 modules</span></div>
+      <h1>Le looksmaxing,<br><em>sans</em> le bullshit.</h1>
+      <p class="lede">Peau, physique, style, présence : un programme clair pour progresser sur ce qui dépend vraiment de toi. Chaque conseil est classé selon son niveau de preuve. Rien de dangereux, rien de magique.</p>
+      <div class="cta-row">
+        <a class="btn" href="#offres">Voir les offres <span class="arr">→</span></a>
+        <a class="btn ghost" href="#diagnostic">Faire le diagnostic · 2 min</a>
+      </div>
+      <div class="facts">
+        <div><b>10</b><span class="mono">modules</span></div>
+        <div><b>90</b><span class="mono">jours de plan</span></div>
+        <div><b>3</b><span class="mono">niveaux de preuve</span></div>
+      </div>
+    </div>
+
+    <figure class="fig">
+      <figcaption class="fig-head mono"><span>Fig. 01 — Zones de travail</span><span>Clique un repère</span></figcaption>
+      <div class="face" id="face">
+        <svg viewBox="0 0 400 520" aria-hidden="true">
+          <!-- guides -->
+          <g class="gl">
+            <line class="d g" pathLength="1" x1="200" y1="20" x2="200" y2="512"/>
+            <line class="d g" pathLength="1" x1="40" y1="112" x2="360" y2="112"/>
+            <line class="d g" pathLength="1" x1="40" y1="222" x2="360" y2="222"/>
+            <line class="d g" pathLength="1" x1="40" y1="332" x2="360" y2="332"/>
+            <line class="d g" pathLength="1" x1="40" y1="468" x2="360" y2="468"/>
+            <text x="42" y="106">TIERS SUP.</text>
+            <text x="42" y="216">TIERS MOY.</text>
+            <text x="42" y="326">TIERS INF.</text>
+            <text x="42" y="462">MENTON</text>
+            <line class="d m" pathLength="1" x1="100" y1="262" x2="300" y2="262"/>
+            <line class="d m" pathLength="1" x1="100" y1="256" x2="100" y2="268"/>
+            <line class="d m" pathLength="1" x1="300" y1="256" x2="300" y2="268"/>
+            <text x="332" y="265" style="fill:var(--bord)">BIZYG.</text>
+            <line class="d m" pathLength="1" x1="128" y1="400" x2="272" y2="400"/>
+            <line class="d m" pathLength="1" x1="128" y1="394" x2="128" y2="406"/>
+            <line class="d m" pathLength="1" x1="272" y1="394" x2="272" y2="406"/>
+            <text x="278" y="403" style="fill:var(--bord)">BIGONIAL</text>
+          </g>
+          <!-- visage -->
+          <path class="d" pathLength="1" d="M200 40 C270 40 305 100 300 180 C302 220 305 250 298 290 C292 330 285 360 272 385 C255 420 235 455 200 468 C165 455 145 420 128 385 C115 360 108 330 102 290 C95 250 98 220 100 180 C95 100 130 40 200 40 Z"/>
+          <path class="d" pathLength="1" d="M118 142 C138 100 262 100 282 142"/>
+          <path class="d" pathLength="1" d="M300 228 C322 224 326 272 302 300"/>
+          <path class="d" pathLength="1" d="M100 228 C78 224 74 272 98 300"/>
+          <path class="d" pathLength="1" d="M128 222 C145 210 170 210 185 218"/>
+          <path class="d" pathLength="1" d="M215 218 C230 210 255 210 272 222"/>
+          <path class="d" pathLength="1" d="M132 246 C146 233 168 233 182 247 C168 255 146 255 132 246 Z"/>
+          <path class="d" pathLength="1" d="M218 247 C232 233 254 233 268 246 C254 255 232 255 218 247 Z"/>
+          <path class="d" pathLength="1" d="M196 256 C193 290 184 314 186 324 C190 333 210 333 214 324"/>
+          <path class="d" pathLength="1" d="M168 376 C185 369 215 369 232 376"/>
+          <path class="d" pathLength="1" d="M176 383 C190 393 210 393 224 383"/>
+          <path class="d" pathLength="1" d="M158 447 L156 516"/>
+          <path class="d" pathLength="1" d="M242 447 L244 516"/>
+        </svg>
+        <button class="hot" style="left:50%;top:13%" data-mod="05" aria-label="Coupe et cheveux : modules 05 et 06">05</button>
+        <button class="hot" style="left:61%;top:47%" data-mod="07" aria-label="Regard et présence : module 07">07</button>
+        <button class="hot" style="left:33%;top:57%" data-mod="02" aria-label="Peau : module 02">02</button>
+        <button class="hot" style="left:50%;top:73%" data-mod="03" aria-label="Dents, posture, sommeil : module 03">03</button>
+        <button class="hot" style="left:28%;top:72%" data-mod="04" aria-label="Mâchoire et physique : module 04">04</button>
+        <button class="hot" style="left:31%;top:95%" data-mod="08" aria-label="Pratiques à écarter : module 08">08</button>
+      </div>
+      <ul class="legend" id="legend">
+        <li data-mod="02"><span class="mono">02</span>Peau &amp; routine</li>
+        <li data-mod="03"><span class="mono">03</span>Dents, posture, sommeil</li>
+        <li data-mod="04"><span class="mono">04</span>Mâchoire &amp; physique</li>
+        <li data-mod="05"><span class="mono">05</span>Coupe, barbe, style</li>
+        <li data-mod="07"><span class="mono">07</span>Regard &amp; présence</li>
+        <li data-mod="08"><span class="mono">08</span>Ce qu'on ne touche pas</li>
+      </ul>
+    </figure>
+  </div>
+</section>
+
+<div class="strip mono" aria-label="Engagements">
+  <div class="wrap">
+    <span>Anti-blackpill</span><span>Niveau de preuve sur chaque conseil</span><span>Renvoi médical systématique</span><span>Zéro raccourci dangereux</span>
+  </div>
+</div>
+
+<!-- ================= CONSTAT ================= -->
+<section class="s" id="constat" data-where="§ 01 Le constat">
+  <div class="wrap">
+    <div class="sh rv">
+      <div class="mono"><b>§ 01</b> — Le constat</div>
+      <div>
+        <h2>Ton fil TikTok te vend <em>des raccourcis.</em></h2>
+        <p>Notes sur 10, « PSL », vidéos qui disent que tout est génétique ou qu'il suffit de taper sur ses pommettes. Résultat : beaucoup d'angoisse, peu de progrès. On repart sur des bases saines.</p>
+      </div>
+    </div>
+    <div class="cols rv">
+      <article><div class="n">i.</div><h3>Ce qui se voit, ça se travaille</h3><p>Peau, taux de gras, posture, coupe, vêtements, sommeil : une grande partie de ce que les autres perçoivent dépend d'habitudes. C'est là qu'on concentre l'effort.</p></article>
+      <article><div class="n">ii.</div><h3>Les raccourcis coûtent cher</h3><p>Bone smashing, régimes à 800 kcal, produits achetés sur des forums : au mieux inutiles, au pire dangereux. On t'explique pourquoi, sources à l'appui.</p></article>
+      <article><div class="n">iii.</div><h3>L'obsession n'est pas un plan</h3><p>Se regarder 40 fois par jour ne fait pas progresser. Un plan sur 90 jours, des points de contrôle et des photos une fois par mois, si.</p></article>
+    </div>
+    <div class="quote rv">
+      <div class="mono" style="color:var(--muted)">Notre position</div>
+      <blockquote><s>Tu es né comme ça, c'est fini.</s><br>Tu as une marge de progression. On t'aide à l'utiliser, <em>sans te mentir.</em></blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PREUVE ================= -->
+<section class="s" id="preuve" data-where="§ 02 Niveaux de preuve">
+  <div class="wrap">
+    <div class="sh rv">
+      <div class="mono"><b>§ 02</b> — La méthode</div>
+      <div>
+        <h2>Chaque affirmation a <em>son étiquette.</em></h2>
+        <p>Dans la formation, chaque conseil est classé selon ce que la science en dit vraiment. Tu sais ce qui est solide, ce qui reste à confirmer, et ce qu'il faut éviter. Clique un niveau pour filtrer.</p>
+      </div>
+    </div>
+
+    <div class="levels rv" role="group" aria-label="Filtrer par niveau de preuve">
+      <button class="lvl" data-l="c" aria-pressed="false"><div class="lvl-t"><i class="mk c"></i>Consensus établi<span class="cnt" data-cnt="c"></span></div><div class="lvl-d">Validé par la recherche et les recommandations des professionnels.</div></button>
+      <button class="lvl" data-l="p" aria-pressed="false"><div class="lvl-t"><i class="mk p"></i>Données préliminaires<span class="cnt" data-cnt="p"></span></div><div class="lvl-d">Pistes intéressantes, mais études encore limitées. À tester avec prudence.</div></button>
+      <button class="lvl" data-l="w" aria-pressed="false"><div class="lvl-t"><i class="mk w"></i>Mise en garde<span class="cnt" data-cnt="w"></span></div><div class="lvl-d">Inefficace ou risqué. Expliqué dans le module 08, à ne pas faire.</div></button>
+    </div>
+
+    <div class="filter-info mono"><span id="finfo">Mythe vs réalité · 10 affirmations</span><button id="freset" hidden>Tout afficher</button></div>
+
+    <div class="claims" id="claims">
+      <article class="claim" data-l="c"><p class="myth">La crème solaire, c'est seulement pour l'été.</p><p class="rea">Les UV sont la première cause du vieillissement visible de la peau, toute l'année. Un SPF chaque matin est la base de toute routine.</p><div class="meta mono"><span class="tag"><i class="mk c"></i>Consensus</span><a href="#m02" data-go="02">Module 02 →</a></div></article>
+      <article class="claim" data-l="p"><p class="myth">Le mewing redessine la mâchoire d'un adulte.</p><p class="rea">Aucune étude solide ne le montre chez l'adulte. Garder la langue au palais au repos reste une bonne habitude, mais sans promesse de transformation osseuse.</p><div class="meta mono"><span class="tag"><i class="mk p"></i>Préliminaire</span><a href="#m03" data-go="03">Module 03 →</a></div></article>
+      <article class="claim w" data-l="w"><p class="myth">Le bone smashing renforce les pommettes.</p><p class="rea">Aucune base scientifique. Taper sur ses os expose à des fractures, des hématomes et des lésions nerveuses. À écarter, point.</p><div class="meta mono"><span class="tag"><i class="mk w"></i>Mise en garde</span><a href="#m08" data-go="08">Module 08 →</a></div></article>
+      <article class="claim" data-l="c"><p class="myth">Ta mâchoire, c'est que de la génétique.</p><p class="rea">L'ossature ne change pas, mais un taux de masse grasse plus bas rend les contours du visage nettement plus visibles. C'est souvent le levier n°1.</p><div class="meta mono"><span class="tag"><i class="mk c"></i>Consensus</span><a href="#m04" data-go="04">Module 04 →</a></div></article>
+      <article class="claim" data-l="p"><p class="myth">Le minoxidil fait pousser la barbe.</p><p class="rea">Quelques petites études vont dans ce sens, mais c'est un usage hors indication, avec des effets secondaires possibles. On en parle à un médecin avant.</p><div class="meta mono"><span class="tag"><i class="mk p"></i>Préliminaire</span><span class="med">Avis médical</span><a href="#m05" data-go="05">Module 05 →</a></div></article>
+      <article class="claim w" data-l="w"><p class="myth">Mâcher du chewing-gum dur muscle la mâchoire.</p><p class="rea">Effet sur le masséter peu documenté, et risque réel de douleurs à l'articulation de la mâchoire (ATM). Le gain ne vaut pas le risque.</p><div class="meta mono"><span class="tag"><i class="mk w"></i>Mise en garde</span><a href="#m08" data-go="08">Module 08 →</a></div></article>
+      <article class="claim" data-l="p"><p class="myth">Mal dormir, ça ne se voit pas.</p><p class="rea">Des études montrent que des visages privés de sommeil sont jugés plus fatigués et moins attirants. Le sommeil reste un levier simple et gratuit.</p><div class="meta mono"><span class="tag"><i class="mk p"></i>Préliminaire</span><a href="#m03" data-go="03">Module 03 →</a></div></article>
+      <article class="claim" data-l="c"><p class="myth">Les rétinoïdes, c'est un truc de quarantenaire.</p><p class="rea">C'est l'un des actifs les mieux étudiés pour la texture et l'acné. À introduire progressivement. La trétinoïne, elle, est sur ordonnance.</p><div class="meta mono"><span class="tag"><i class="mk c"></i>Consensus</span><span class="med">Avis médical</span><a href="#m02" data-go="02">Module 02 →</a></div></article>
+      <article class="claim w" data-l="w"><p class="myth">Un régime à 800 kcal, ça accélère les résultats.</p><p class="rea">Restriction extrême = perte de muscle, fatigue, peau terne et risque de troubles alimentaires. Un déficit modéré donne de meilleurs résultats sur 90 jours.</p><div class="meta mono"><span class="tag"><i class="mk w"></i>Mise en garde</span><a href="#m08" data-go="08">Module 08 →</a></div></article>
+      <article class="claim" data-l="c"><p class="myth">Perdre ses cheveux, on n'y peut rien.</p><p class="rea">Des traitements efficaces existent pour beaucoup d'hommes, mais uniquement sur avis médical. Plus tu consultes tôt, plus tu as d'options.</p><div class="meta mono"><span class="tag"><i class="mk c"></i>Consensus</span><span class="med">Avis médical</span><a href="#m06" data-go="06">Module 06 →</a></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAMME ================= -->
+<section class="s" id="programme" data-where="§ 03 Programme">
+  <div class="wrap">
+    <div class="sh rv">
+      <div class="mono"><b>§ 03</b> — Le programme</div>
+      <div>
+        <h2>Dix modules. <em>Un ordre logique.</em></h2>
+        <p>On commence par le cadre, on finit par un plan d'action. Ouvre un module pour voir ce qu'il contient.</p>
+      </div>
+    </div>
+    <div class="mods" id="mods"></div>
+  </div>
+</section>
+
+<!-- ================= DIAGNOSTIC ================= -->
+<section class="s" id="diagnostic" data-where="§ 04 Diagnostic">
+  <div class="wrap diag">
+    <div class="diag-side rv">
+      <div class="sh" style="grid-template-columns:1fr;margin:0;gap:14px">
+        <div class="mono"><b>§ 04</b> — Diagnostic</div>
+        <div>
+          <h2>Par où <em>commencer&nbsp;?</em></h2>
+          <p>Cinq questions, et on te donne l'ordre de lecture qui a le plus de sens pour toi. Rien n'est enregistré.</p>
+        </div>
+      </div>
+      <div class="prog" id="prog" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="mono" id="progtxt">Question 1 / 5</div>
+    </div>
+    <div class="card rv" id="card" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ================= PLAN 90 ================= -->
+<section class="s" id="plan" data-where="§ 05 Plan 90 jours">
+  <div class="wrap">
+    <div class="sh rv">
+      <div class="mono"><b>§ 05</b> — Plan d'action</div>
+      <div>
+        <h2>90 jours, <em>jour par jour.</em></h2>
+        <p>Fais glisser le curseur pour voir ce que tu fais à chaque étape. Pas de transformation miracle : des habitudes qui s'empilent.</p>
+      </div>
+    </div>
+    <div class="plan rv">
+      <div class="plan-top">
+        <div class="day"><small>Jour</small><span id="dnum">1</span></div>
+        <div class="track">
+          <div class="phases mono" id="phases"><span>Fondations</span><span>Installation</span><span>Progression</span><span>Affinage</span></div>
+          <input type="range" id="range" min="1" max="90" value="1" aria-label="Jour du programme">
+          <div class="ticks mono"><span>J1</span><span>J30</span><span>J60</span><span>J90</span></div>
+        </div>
+      </div>
+      <div class="plan-b" id="planb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OFFRES ================= -->
+<section class="s dark" id="offres" data-where="§ 06 Offres">
+  <div class="wrap">
+    <div class="sh rv">
+      <div class="mono"><b>§ 06</b> — Offres</div>
+      <div>
+        <h2>Trois formules. <em>Prix de lancement.</em></h2>
+        <p>Le contenu est le même pour tout le monde. Ce qui change, c'est le niveau d'accompagnement.</p>
+      </div>
+    </div>
+    <!-- TODO : confirmer le contenu exact de chaque palier, puis remplacer les href="#" par les liens de paiement -->
+    <div class="tiers rv">
+      <div class="tier">
+        <div class="nm mono">Essentiel</div>
+        <div class="price">27<sup>€</sup></div>
+        <div class="sub">Paiement unique</div>
+        <ul>
+          <li>Les 10 modules + préambule</li>
+          <li>Niveau de preuve sur chaque conseil</li>
+          <li>Routine skincare matin / soir</li>
+          <li>Liste des pratiques à écarter</li>
+        </ul>
+        <a class="btn" href="#">Choisir l'Essentiel</a>
+      </div>
+      <div class="tier rec">
+        <span class="badge mono">Recommandé</span>
+        <div class="nm mono">Complet</div>
+        <div class="price">44<sup>€</sup></div>
+        <div class="sub">Paiement unique</div>
+        <ul>
+          <li>Tout l'Essentiel</li>
+          <li class="plus">Plan d'action 90 jours détaillé</li>
+          <li class="plus">Points de contrôle J30 / J60 / J90</li>
+          <li class="plus">FAQ &amp; ressources complètes</li>
+        </ul>
+        <a class="btn" href="#">Choisir le Complet <span class="arr">→</span></a>
+      </div>
+      <div class="tier">
+        <div class="nm mono">Accompagné</div>
+        <div class="price">79<sup>€</sup></div>
+        <div class="sub">ou 2 × 39,50 €</div>
+        <ul>
+          <li>Tout le Complet</li>
+          <li class="plus">Accès à la communauté Discord</li>
+          <li class="plus">Un point mensuel</li>
+          <li class="plus">Questions / réponses en direct</li>
+        </ul>
+        <a class="btn" href="#">Choisir l'Accompagné</a>
+      </div>
+    </div>
+    <div class="honest rv">
+      <div><b>Un vrai prix de lancement.</b>Il augmentera à la fin de la période de lancement. Pas de faux compte à rebours.</div>
+      <div><b>Paiement en 2 fois.</b>Disponible à partir de 49 €.</div>
+      <div><b>Moins de 18 ans&nbsp;?</b>L'achat se fait avec l'accord et le moyen de paiement d'un parent.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="s" id="faq" data-where="§ 07 FAQ">
+  <div class="wrap">
+    <div class="sh rv">
+      <div class="mono"><b>§ 07</b> — Questions</div>
+      <div><h2>Ce qu'on nous <em>demande.</em></h2></div>
+    </div>
+    <div class="faq">
+      <div></div>
+      <div>
+        <details><summary>Je suis débutant total, c'est pour moi&nbsp;?</summary><p>Oui, c'est fait pour ça. Le module 01 pose les bases et le plan 90 jours te dit quoi faire chaque semaine. Pas besoin de matériel ni de connaissances.</p></details>
+        <details><summary>Combien ça coûte en produits&nbsp;?</summary><p>La routine skincare proposée tient dans un budget de 35 à 50 € par mois. Pour le reste (sommeil, posture, sport, style), on privilégie ce qui ne coûte rien ou presque.</p></details>
+        <details><summary>Vous promettez des résultats&nbsp;?</summary><p>Non, et méfie-toi de ceux qui le font. On te donne une méthode et un plan basés sur ce qui est le mieux documenté. Les résultats dépendent de ta régularité et de ton point de départ.</p></details>
+        <details><summary>C'est un avis médical&nbsp;?</summary><p>Non. La formation a une visée esthétique et éducative. Pour tout ce qui touche à la santé (acné sévère, chute de cheveux, dents, traitements), on te renvoie vers un médecin, un dermatologue ou un dentiste.</p></details>
+        <details><summary>Et le mewing, le « PSL », les notes sur 10&nbsp;?</summary><p>On en parle, sans tabou. Le mewing est classé avec ses limites, et on explique pourquoi se noter en permanence nuit plus qu'autre chose. L'objectif, c'est de progresser, pas d'entrer dans une case.</p></details>
+        <details><summary>J'ai moins de 18 ans, je peux acheter&nbsp;?</summary><p>Oui, avec l'accord d'un parent, qui effectue le paiement. Le contenu évite toute pratique risquée et insiste sur le suivi par des professionnels.</p></details>
+        <details><summary>La formation existe en anglais&nbsp;?</summary><p>Oui, une version anglaise est disponible, avec un vocabulaire un peu plus technique.</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL ================= -->
+<section class="final" id="liste" data-where="Liste d'attente">
+  <div class="wrap">
+    <div class="mono rv" style="color:var(--bord)">Become a Slayer</div>
+    <h2 class="rv">Commence<br>le <em>jour 1.</em></h2>
+    <div class="final-g rv">
+      <p>Inscris-toi pour être prévenu à l'ouverture et profiter du prix de lancement. Un email, pas de spam.</p>
+      <div>
+        <!-- TODO : brancher sur l'outil d'emailing (Brevo, Tally, Mailchimp…) via action="" -->
+        <form class="wl" id="wl" novalidate>
+          <label for="email" class="sr" style="position:absolute;left:-9999px">Ton email</label>
+          <input id="email" type="email" placeholder="ton@email.com" autocomplete="email" required>
+          <button class="btn" type="submit">Rejoindre <span class="arr">→</span></button>
+        </form>
+        <div class="wl-msg" id="wlmsg" role="status"></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="big">Become a Slayer.</div>
+      <div class="links mono"><a href="#">TikTok</a><a href="#">Instagram</a><a href="mailto:[email]">Contact</a></div>
+    </div>
+    <p>Ce programme a une visée esthétique et éducative. Il ne remplace pas l'avis d'un médecin, d'un dermatologue, d'un dentiste ou d'un kinésithérapeute. En cas de doute sur ta santé, consulte un professionnel.</p>
+    <div class="legal mono"><span>© 2026 2Th &amp; H4SH</span><span><a href="#">Mentions légales</a> · <a href="#">CGV</a> · <a href="#">Confidentialité</a></span></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  /* ---------- modules ---------- */
+  const MODS = [
+    ["00","Préambule","Avertissement","Ce que la formation est, et ce qu'elle n'est pas.",["Visée esthétique, pas un avis médical","Comment lire les niveaux de preuve","Quand consulter un professionnel"],"pre"],
+    ["01","Cadre et attentes réalistes","Fondations","Avant de changer quoi que ce soit, on sépare ce qui se travaille de ce qui ne bouge pas, et on sort de la logique de note.",["Ce qui est modifiable, ce qui ne l'est pas","Pourquoi le blackpill est une impasse","Suivre ses progrès sans obsession"]],
+    ["02","Skincare","Peau","Une routine matin et soir simple, des actifs bien choisis et introduits dans le bon ordre.",["Routine matin / soir pas à pas","Actifs : à quoi ils servent, comment les introduire","Budget : 35 à 50 € par mois","Quand voir un dermatologue"]],
+    ["03","Soft-maxxing","Habitudes","Les leviers discrets qui changent l'impression générale : posture, sourire, sommeil.",["Posture et position de la tête","Mewing : ce qu'on sait, et ses limites","Dents : hygiène, et quand consulter","Sommeil et hydratation"]],
+    ["04","Physique","Corps","Perdre du gras sans se détruire et construire une silhouette en V.",["Perte de graisse en déficit modéré","V-taper : dos, épaules, surcharge progressive","Mâchoire : le rôle du taux de gras"]],
+    ["05","Style et grooming","Image","Une coupe adaptée à ta morphologie et une garde-robe qui fonctionne sans effort.",["Choisir sa coupe selon sa forme de visage","Barbe : entretien et contours","Garde-robe capsule"]],
+    ["06","Soins capillaires","Cheveux","Prendre soin de ses cheveux et repérer tôt les signes de chute.",["Routine de lavage adaptée","Reconnaître une chute qui doit inquiéter","Traitements : uniquement sur avis médical"]],
+    ["07","Confiance et langage corporel","Présence","La présence se travaille comme le reste : posture, regard, voix.",["Contact visuel et posture ouverte","Voix et rythme","Confiance sans comparaison permanente"]],
+    ["08","Pratiques à écarter","Danger","Ce qu'on voit partout en ligne et qu'il ne faut pas faire, avec les raisons.",["Bone smashing","Mewing agressif","Restriction alimentaire extrême","Produits non réglementés","Chirurgie non encadrée"],"danger"],
+    ["09","Plan d'action 90 jours","Action","Tout le programme transformé en étapes concrètes, avec des points de contrôle.",["Semaine par semaine","Points de contrôle J30 / J60 / J90","Ajuster sans tout recommencer"]],
+    ["10","FAQ et ressources","Ressources","Les réponses aux questions fréquentes et les sources pour aller plus loin.",["Sources et lectures","Quels professionnels consulter, pour quoi","Questions fréquentes"]]
+  ];
+  $("#mods").innerHTML = MODS.map(([n,t,tg,p,li,cls]) => `
+    <div class="mod ${cls||""}" id="m${n}">
+      <h3><button aria-expanded="false" aria-controls="b${n}">
+        <span class="num">${n === "00" ? "—" : n}</span><span class="ttl">${t}</span><span class="tg mono">${tg}</span><span class="pm" aria-hidden="true"></span>
+      </button></h3>
+      <div class="body" id="b${n}" role="region"><div><div class="inner"><p>${p}</p><ul>${li.map(x=>`<li>${x}</li>`).join("")}</ul></div></div></div>
+    </div>`).join("");
+  const toggle = (m, force) => {
+    const open = force ?? !m.classList.contains("open");
+    m.classList.toggle("open", open);
+    $("button", m).setAttribute("aria-expanded", open);
+  };
+  $$(".mod").forEach(m => $("button", m).addEventListener("click", () => toggle(m)));
+  const goMod = n => {
+    const m = $("#m" + n); if (!m) return;
+    toggle(m, true);
+    m.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"});
+    m.classList.remove("flash"); void m.offsetWidth; m.classList.add("flash");
+  };
+  document.addEventListener("click", e => {
+    const a = e.target.closest("[data-go]");
+    if (a) { e.preventDefault(); goMod(a.dataset.go); }
+  });
+
+  /* ---------- face ---------- */
+  const face = $("#face");
+  requestAnimationFrame(() => setTimeout(() => face.classList.add("on"), 150));
+  $$(".hot").forEach((h, i) => {
+    h.style.transitionDelay = (1.6 + i * .12) + "s";
+    h.addEventListener("transitionend", () => h.style.transitionDelay = "0s", {once: true});
+    const set = on => {
+      h.classList.toggle("act", on);
+      $$("#legend li").forEach(li => li.classList.toggle("act", on && li.dataset.mod === h.dataset.mod));
+    };
+    h.addEventListener("mouseenter", () => set(true));
+    h.addEventListener("mouseleave", () => set(false));
+    h.addEventListener("focus", () => set(true));
+    h.addEventListener("blur", () => set(false));
+    h.addEventListener("click", () => goMod(h.dataset.mod));
+  });
+  $$("#legend li").forEach(li => {
+    li.style.cursor = "pointer";
+    li.addEventListener("click", () => goMod(li.dataset.mod));
+    li.addEventListener("mouseenter", () => $$(".hot").forEach(h => h.classList.toggle("act", h.dataset.mod === li.dataset.mod)));
+    li.addEventListener("mouseleave", () => $$(".hot").forEach(h => h.classList.remove("act")));
+  });
+
+  /* ---------- claims filter ---------- */
+  const claims = $$(".claim");
+  const names = {c: "Consensus établi", p: "Données préliminaires", w: "Mise en garde"};
+  $$("[data-cnt]").forEach(s => s.textContent = claims.filter(c => c.dataset.l === s.dataset.cnt).length);
+  const applyFilter = l => {
+    $$(".lvl").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === l));
+    claims.forEach(c => c.classList.toggle("hide", !!l && c.dataset.l !== l));
+    const n = claims.filter(c => !c.classList.contains("hide")).length;
+    $("#finfo").textContent = l ? `${names[l]} · ${n} affirmation${n > 1 ? "s" : ""}` : `Mythe vs réalité · ${n} affirmations`;
+    $("#freset").hidden = !l;
+  };
+  $$(".lvl").forEach(b => b.addEventListener("click", () => applyFilter(b.getAttribute("aria-pressed") === "true" ? null : b.dataset.l)));
+  $("#freset").addEventListener("click", () => applyFilter(null));
+
+  /* ---------- diagnostic ---------- */
+  const Q = [
+    {q: "Ton objectif n°1 en ce moment ?", o: [
+      ["Avoir une peau plus nette", {"02": 3}],
+      ["Un visage plus défini", {"04": 3, "03": 1}],
+      ["Mieux m'habiller, une meilleure coupe", {"05": 3, "06": 1}],
+      ["Avoir plus d'assurance", {"07": 3, "03": 1}]]},
+    {q: "Ta peau aujourd'hui ?", o: [
+      ["Boutons fréquents", {"02": 2}],
+      ["Grasse, brillante", {"02": 1}],
+      ["Sèche ou terne", {"02": 1}],
+      ["Ça va, rien de spécial", {}]]},
+    {q: "Tu dors combien par nuit, en moyenne ?", o: [
+      ["Moins de 6 h", {"03": 2}],
+      ["Entre 6 et 7 h", {"03": 1}],
+      ["7 h ou plus", {}]]},
+    {q: "Ton activité physique ?", o: [
+      ["Aucune", {"04": 2}],
+      ["Irrégulière", {"04": 1}],
+      ["3 séances par semaine ou plus", {"05": 1}]]},
+    {q: "Qu'est-ce que tu as déjà testé ?", o: [
+      ["Rien encore", {"01": 1}],
+      ["Mewing ou bone smashing vus sur TikTok", {"08": 3, "03": 1}],
+      ["Un régime très strict", {"08": 3, "04": 1}],
+      ["Des produits skincare un peu au hasard", {"02": 1}]]}
+  ];
+  const WHY = {
+    "01": "Pose le cadre avant de te lancer.",
+    "02": "Ta peau est ta priorité visible : routine simple, actifs dans le bon ordre.",
+    "03": "Sommeil, posture, dents : des leviers discrets mais rapides.",
+    "04": "Le taux de gras joue beaucoup sur la définition du visage.",
+    "05": "Coupe et vêtements : l'effet le plus immédiat.",
+    "06": "Prendre soin de tes cheveux tant qu'il est temps.",
+    "07": "La présence se travaille : posture, regard, voix.",
+    "08": "Tu as croisé des pratiques risquées. On commence par faire le tri."
+  };
+  const title = n => MODS.find(m => m[0] === n)[1];
+  let step = 0, answers = [];
+  const card = $("#card"), bars = $$("#prog i");
+  const renderQ = () => {
+    bars.forEach((b, i) => b.classList.toggle("on", i < step));
+    $("#progtxt").textContent = step < Q.length ? `Question ${step + 1} / ${Q.length}` : "Résultat";
+    if (step >= Q.length) return renderRes();
+    const {q, o} = Q[step];
+    card.innerHTML = `
+      <div class="card-h mono"><span>Diagnostic</span><span>${String(step + 1).padStart(2, "0")} / 05</span></div>
+      <div class="card-b fade"><p class="q">${q}</p><div class="opts">${o.map(([t], i) =>
+        `<button class="opt" data-i="${i}"><span class="k">${"ABCD"[i]}</span>${t}</button>`).join("")}</div></div>
+      <div class="card-f mono"><button id="back" ${step ? "" : "disabled"}>← Retour</button><span style="color:var(--muted)">Clique ou tape A-D</span></div>`;
+    $$(".opt", card).forEach(b => b.addEventListener("click", () => pick(+b.dataset.i)));
+    $("#back").addEventListener("click", () => { step--; answers.pop(); renderQ(); });
+  };
+  const pick = i => { answers[step] = i; step++; renderQ(); };
+  document.addEventListener("keydown", e => {
+    if (step >= Q.length || !card.matches(":hover, :focus-within")) return;
+    const i = "abcd".indexOf(e.key.toLowerCase());
+    if (i >= 0 && i < Q[step].o.length) pick(i);
+  });
+  const renderRes = () => {
+    const sc = {};
+    answers.forEach((a, s) => Object.entries(Q[s].o[a][1]).forEach(([k, v]) => sc[k] = (sc[k] || 0) + v));
+    const risky = (sc["08"] || 0) >= 3;
+    let order = Object.entries(sc).filter(([k]) => k !== "01").sort((a, b) => b[1] - a[1]).map(([k]) => k);
+    if (risky) order = ["08", ...order.filter(k => k !== "08")];
+    order = ["01", ...order].slice(0, 4);
+    if (order.length < 4) ["02", "03", "04"].forEach(k => order.length < 4 && !order.includes(k) && order.push(k));
+    card.innerHTML = `
+      <div class="card-h mono"><span>Ton ordre de lecture</span><span>Résultat</span></div>
+      <div class="card-b fade res">
+        ${risky ? `<div class="alert">Tu as croisé des méthodes risquées. Avant tout le reste, lis le module 08.</div>` : ""}
+        <ol>${order.map(k => `<li><div><b>${k} · ${title(k)}</b><span>${WHY[k]}</span></div></li>`).join("")}</ol>
+        <div class="cta-row" style="margin-top:auto"><a class="btn" href="#offres">Voir les offres <span class="arr">→</span></a><a class="btn ghost" href="#plan">Voir le plan 90 jours</a></div>
+      </div>
+      <div class="card-f mono"><button id="redo">↺ Recommencer</button><span style="color:var(--muted)">Puis module 09 : le plan</span></div>`;
+    $("#redo").addEventListener("click", () => { step = 0; answers = []; renderQ(); });
+  };
+  renderQ();
+
+  /* ---------- plan 90 ---------- */
+  const PH = [
+    {to: 14, n: "Fondations", d: "On installe la base, sans rien compliquer.",
+      a: ["Routine : nettoyant doux, hydratant, SPF", "Heures de coucher fixes", "Photos de départ, même lumière"],
+      m: ["01", "02", "03"]},
+    {to: 30, n: "Installation", d: "On ajoute un seul élément à la fois.",
+      a: ["Introduire un actif, progressivement", "3 séances de sport par semaine", "Déficit calorique modéré si besoin"],
+      m: ["02", "04"]},
+    {to: 60, n: "Progression", d: "Les habitudes tiennent, on monte en intensité.",
+      a: ["Surcharge progressive à l'entraînement", "Coupe adaptée à ta morphologie", "Garde-robe capsule"],
+      m: ["04", "05", "06"]},
+    {to: 90, n: "Affinage", d: "On ajuste ce qui marche et on travaille la présence.",
+      a: ["Bilan photo et ajustements", "Langage corporel et contact visuel", "Construire la suite, au-delà de J90"],
+      m: ["07", "09"]}
+  ];
+  const range = $("#range"), planb = $("#planb");
+  let cur = -1;
+  const upd = () => {
+    const d = +range.value;
+    $("#dnum").textContent = d;
+    range.style.setProperty("--p", ((d - 1) / 89 * 100) + "%");
+    const i = PH.findIndex(p => d <= p.to);
+    $$("#phases span").forEach((s, k) => s.classList.toggle("on", k === i));
+    const cp = [30, 60, 90].includes(d) ? `<li class="checkpt">Point de contrôle J${d} : photos et bilan</li>` : "";
+    {
+      const p = PH[i];
+      planb.innerHTML = `
+        <div><h4>Phase ${i + 1} / 4</h4><div class="ph">${p.n}</div><p>${p.d}</p></div>
+        <div><h4>Ce que tu fais</h4><ul>${cp}${p.a.map(x => `<li>${x}</li>`).join("")}</ul></div>
+        <div><h4>Modules associés</h4><ul>${p.m.map(k => `<li><a href="#m${k}" data-go="${k}" style="text-decoration:none">${k} · ${title(k)} →</a></li>`).join("")}</ul></div>`;
+      if (i !== cur) planb.classList.remove("fade"), void planb.offsetWidth, planb.classList.add("fade");
+      cur = i;
+    }
+  };
+  range.addEventListener("input", upd);
+  upd();
+
+  /* ---------- waitlist ---------- */
+  $("#wl").addEventListener("submit", e => {
+    e.preventDefault();
+    const v = $("#email").value.trim(), msg = $("#wlmsg");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { msg.className = "wl-msg"; msg.textContent = "Cet email n'a pas l'air valide."; return; }
+    // TODO : envoyer v à l'outil d'emailing
+    msg.className = "wl-msg ok";
+    msg.textContent = "C'est noté. Tu recevras un email à l'ouverture, avec le prix de lancement.";
+    e.target.reset();
+  });
+
+  /* ---------- section indicator + reveal ---------- */
+  const where = $("#where");
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) where.textContent = e.target.dataset.where; }), {rootMargin: "-45% 0px -50% 0px"});
+  $$("[data-where]").forEach(s => io.observe(s));
+  const ro = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); } }), {threshold: .12});
+  $$(".rv").forEach(el => ro.observe(el));
+})();
+</script>
+</body>
+</html>
