@@ -128,5 +128,7 @@ check([
 add(P("This plan is for aesthetic and educational purposes only. It does not replace advice from a qualified healthcare professional.", { run: { italics: true, size: 18, color: "6F6A61" } }));
 };
 
-build({ lang: "en", num: "09", short: "90-day plan", title: "Module 09 — 90-day action plan", content,
+const spec = ({ lang: "en", num: "09", short: "90-day plan", title: "Module 09 — 90-day action plan", content,
   out: require("path").join(__dirname, "..", "module-09-90-day-plan.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

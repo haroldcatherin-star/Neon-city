@@ -124,5 +124,7 @@ sources([
 ]);
 };
 
-build({ lang: "en", num: "05", short: "Style and grooming", title: "Module 05 — Style and grooming", content,
+const spec = ({ lang: "en", num: "05", short: "Style and grooming", title: "Module 05 — Style and grooming", content,
   out: require("path").join(__dirname, "..", "module-05-style-grooming.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

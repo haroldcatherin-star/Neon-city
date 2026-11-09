@@ -112,5 +112,7 @@ sources([
 ]);
 };
 
-build({ lang: "en", num: "07", short: "Confidence", title: "Module 07 — Confidence and body language", content,
+const spec = ({ lang: "en", num: "07", short: "Confidence", title: "Module 07 — Confidence and body language", content,
   out: require("path").join(__dirname, "..", "module-07-confidence.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

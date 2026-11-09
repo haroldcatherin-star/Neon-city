@@ -215,9 +215,11 @@ add(H1("", "Sources"));
   "Kafi R, Kwak HSR, Schumacher WE, et al. Improvement of naturally aged skin with vitamin A (retinol). _Archives of Dermatology_, 2007 ; 143(5) : 606–612.",
   "Draelos ZD, Matsubara A, Smiles K. The effect of 2% niacinamide on facial sebum production. _Journal of Cosmetic and Laser Therapy_, 2006 ; 8(2) : 96–101.",
   "ANSM (Agence nationale de sécurité du médicament). Isotrétinoïne orale : informations et mesures de réduction des risques. ansm.sante.fr.",
-].forEach(s => add(new Paragraph({ numbering: { reference: "src", level: 0 }, children: runs(s, { size: 18 }), spacing: { after: 80 } })));
+].forEach(s => add(new Paragraph({ numbering: { reference: "src", level: 0, instance: 1002 }, children: runs(s, { size: 18 }), spacing: { after: 80 } })));
 add(SP(), P("Ce module a une visée esthétique et éducative. Il ne remplace pas l'avis d'un médecin, d'un dermatologue ou d'un pharmacien.", { run: { italics: true, size: 18, color: MUTED } }));
 
 };
-build({ lang: "fr", num: "02", short: "Skincare", title: "Module 02 — Skincare", content,
+const spec = ({ lang: "fr", num: "02", short: "Skincare", title: "Module 02 — Skincare", content,
   out: require("path").join(__dirname, "..", "module-02-skincare.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

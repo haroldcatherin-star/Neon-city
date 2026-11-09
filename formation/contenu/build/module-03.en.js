@@ -136,5 +136,7 @@ sources([
 ]);
 };
 
-build({ lang: "en", num: "03", short: "Soft-maxxing", title: "Module 03 — Soft-maxxing", content,
+const spec = ({ lang: "en", num: "03", short: "Soft-maxxing", title: "Module 03 — Soft-maxxing", content,
   out: require("path").join(__dirname, "..", "module-03-soft-maxxing.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

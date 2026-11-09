@@ -136,5 +136,7 @@ sources([
 ]);
 };
 
-build({ lang: "en", num: "04", short: "Physique", title: "Module 04 — Physique", content,
+const spec = ({ lang: "en", num: "04", short: "Physique", title: "Module 04 — Physique", content,
   out: require("path").join(__dirname, "..", "module-04-physique.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

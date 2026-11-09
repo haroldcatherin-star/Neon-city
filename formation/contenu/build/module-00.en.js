@@ -58,5 +58,7 @@ add(B("Your face and body will keep changing for several more years on their own
 add(P("Ready? Turn to module 01."));
 };
 
-build({ lang: "en", num: "00", short: "Preamble", title: "Preamble", content,
+const spec = ({ lang: "en", num: "00", short: "Preamble", title: "Preamble", content,
   out: require("path").join(__dirname, "..", "module-00-preamble.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

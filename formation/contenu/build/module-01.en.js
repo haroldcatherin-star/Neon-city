@@ -115,5 +115,7 @@ sources([
 ]);
 };
 
-build({ lang: "en", num: "01", short: "Framework", title: "Module 01 — Framework and realistic expectations", content,
+const spec = ({ lang: "en", num: "01", short: "Framework", title: "Module 01 — Framework and realistic expectations", content,
   out: require("path").join(__dirname, "..", "module-01-framework.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

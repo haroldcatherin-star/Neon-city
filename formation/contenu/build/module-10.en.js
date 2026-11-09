@@ -95,5 +95,7 @@ add(P("Sources for each claim are listed at the end of the relevant module. The 
 add(P("This program is for aesthetic and educational purposes only. It does not replace advice from a qualified healthcare professional.", { run: { italics: true, size: 18, color: "6F6A61" } }));
 };
 
-build({ lang: "en", num: "10", short: "FAQ and resources", title: "Module 10 — FAQ and resources", content,
+const spec = ({ lang: "en", num: "10", short: "FAQ and resources", title: "Module 10 — FAQ and resources", content,
   out: require("path").join(__dirname, "..", "module-10-faq-resources.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);

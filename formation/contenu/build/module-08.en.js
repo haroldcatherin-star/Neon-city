@@ -138,5 +138,7 @@ sources([
 ]);
 };
 
-build({ lang: "en", num: "08", short: "Practices to avoid", title: "Module 08 — Practices to avoid", content,
+const spec = ({ lang: "en", num: "08", short: "Practices to avoid", title: "Module 08 — Practices to avoid", content,
   out: require("path").join(__dirname, "..", "module-08-practices-to-avoid.en.docx") });
+module.exports = spec;
+if (require.main === module) build(spec);
